@@ -5,6 +5,11 @@ export interface Props {
   title: string;
 }
 const { title } = Astro.props;
+
+// URL publicada. Las vistas previas de WhatsApp/Facebook exigen que la
+// imagen sea una URL absoluta y https, no una ruta relativa.
+const SITIO = "https://boda-ana-lucia-y-marcelo-2026.vercel.app";
+const MINIATURA = SITIO + "/imagenes/miniatura.jpg";
 ---
 
 <!doctype html>
@@ -16,6 +21,28 @@ const { title } = Astro.props;
     <link rel="icon" type="image/png" href="/iconos/Anillos.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- 🔗 VISTA PREVIA AL COMPARTIR EL LINK (WhatsApp, etc.)   -->
+    <!--    Solo miniatura + nombre: sin descripcion, para que   -->
+    <!--    no aparezca texto extra debajo del titulo.           -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={SITIO + "/"} />
+    <meta property="og:title" content={title} />
+    <meta property="og:site_name" content={title} />
+    <meta property="og:image" content={MINIATURA} />
+    <meta property="og:image:secure_url" content={MINIATURA} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1527" />
+    <meta property="og:image:height" content="1080" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:locale" content="es_BO" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:image" content={MINIATURA} />
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
