@@ -1,0 +1,114 @@
+---
+// src/layouts/Layout.astro
+import "../styles/global.css";
+export interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="m-0 p-0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light only" />
+    <link rel="icon" type="image/png" href="/iconos/Anillos.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Crimson+Text:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Crimson+Text:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* FORZAR MODO CLARO - DESHABILITAR MODO OSCURO */
+      :root {
+        color-scheme: light only;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        color-scheme: light only;
+      }
+
+      html {
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        color-scheme: light only;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        overflow-x: hidden;
+        color-scheme: light only;
+        position: relative;
+        background-color: #ffffff;
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("/imagenes/BlancoTextura.png");
+        background-repeat: repeat;
+        background-size: contain;
+        opacity: 0.5;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      main {
+        position: relative;
+        z-index: 1;
+        background: transparent !important;
+      }
+
+      /* Prevenir cualquier cambio de color por modo oscuro */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: light only !important;
+        }
+
+        html,
+        body {
+          background-color: white !important;
+          color: inherit !important;
+        }
+
+        * {
+          color-scheme: light only !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen m-0 p-0">
+    <main class="m-0 p-0 overflow-x-hidden">
+      <slot />
+    </main>
+  </body>
+</html>

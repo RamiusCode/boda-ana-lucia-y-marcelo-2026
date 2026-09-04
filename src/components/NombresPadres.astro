@@ -1,0 +1,198 @@
+<!-- ═══════════════════════════════════════════════════════════ --><!-- 👨‍👩‍👧‍👦 SECCIÓN: NUESTROS PADRES                                --><!-- ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full pt-20 pb-12 sm:py-20 md:py-24 lg:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 📇 CARD DE NUESTROS PADRES -->
+        <div class="flex justify-center">
+            <div class="relative w-full max-w-5xl" id="card-padres">
+                <!-- BOTÓN DECORATIVO SUPERIOR -->
+                <div
+                    class="absolute z-20"
+                    style="top: -30px; left: 50%; transform: translateX(-50%);"
+                >
+                    <div class="w-16 h-16" id="boton-decorativo">
+                        <img
+                            src="/imagenes/boton.webp"
+                            alt="Decoración"
+                            class="w-full h-full object-contain"
+                        />
+                    </div>
+                </div>
+
+                <!-- CARD PRINCIPAL -->
+                <div
+                    class="relative rounded-lg shadow-xl overflow-hidden bg-[#f5f5f5]"
+                    id="card-principal"
+                >
+                    <!-- IMAGEN DE FONDO -->
+                    <img
+                        src="/imagenes/fondoplomo.png"
+                        alt="Fondo padres"
+                        class="absolute inset-0 w-full h-full object-cover"
+                    />
+
+                    <!-- Contenido de la card -->
+                    <div class="relative px-2 pt-16 pb-10 z-10">
+                        <!-- TÍTULO PRINCIPAL -->
+                        <div class="text-center mb-6">
+                            <h2
+                                class="font-great-vibes text-[2.25rem] leading-tight text-[#122a4d]"
+                                id="titulo-padres"
+                            >
+                                Nuestros Padres
+                            </h2>
+                        </div>
+
+
+                         <!-- PADRES DEL NOVIO -->
+                        <div class="text-center" id="seccion-novio">
+                            <h3
+                                class="font-crimson text-base uppercase tracking-wider text-[#274c77] font-semibold mb-2"
+                            >
+                                PADRES DEL NOVIO
+                            </h3>
+                            <p
+                                class="font-cormorant-sc text-lg leading-relaxed text-[#122a4d]"
+                            >
+                                Rebeca Calancha Cossío
+                                <br />
+                                Eduardo Flores Torrico
+                            </p>
+                        </div>
+
+                        
+                        <!-- SEPARADOR -->
+                        <div class="flex items-center justify-center my-3 px-8">
+                            <div class="flex-1 h-px bg-[#b7956b]/45"></div>
+                            <div class="mx-4 text-[#b7956b] text-lg">✦</div>
+                            <div class="flex-1 h-px bg-[#b7956b]/45"></div>
+                        </div>
+
+                        <!-- PADRES DE LA NOVIA -->
+                        <div class="text-center mb-5" id="seccion-novia">
+                            <h3
+                                class="font-crimson text-base uppercase tracking-wider text-[#274c77] font-semibold mb-2"
+                            >
+                                PADRES DE LA NOVIA
+                            </h3>
+                            <p
+                                class="font-cormorant-sc text-lg leading-relaxed text-[#122a4d]"
+                            >
+                                Andrea Espinal vda. de Mamani
+                                <br />
+                                Carlos Mamani (+)
+                            </p>
+                        </div>
+
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🎬 ANIMACIONES CON GSAP                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            // 🎯 ANIMACIÓN ELEGANTE DE ENTRADA
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#card-padres",
+                    start: "top 80%",
+                    toggleActions: "play none none reset",
+                },
+            });
+
+            // Todos los elementos entran al mismo tiempo con diferentes efectos
+            tl.fromTo(
+                "#boton-decorativo",
+                {
+                    opacity: 0,
+                    scale: 0,
+                    rotation: -180,
+                },
+                {
+                    opacity: 1,
+                    scale: 1,
+                    rotation: 0,
+                    duration: 1,
+                    ease: "back.out(1.7)",
+                },
+                0, // Empieza en el tiempo 0
+            )
+                .fromTo(
+                    "#card-principal",
+                    {
+                        opacity: 0,
+                        y: 50,
+                        scale: 0.95,
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 1,
+                        ease: "power3.out",
+                    },
+                    0, // Empieza en el tiempo 0
+                )
+                .fromTo(
+                    "#titulo-padres",
+                    {
+                        opacity: 0,
+                        y: -30,
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        ease: "power2.out",
+                    },
+                    0, // Empieza en el tiempo 0
+                )
+                .fromTo(
+                    "#seccion-novia",
+                    {
+                        opacity: 0,
+                        x: -30,
+                    },
+                    {
+                        opacity: 1,
+                        x: 0,
+                        duration: 1,
+                        ease: "power2.out",
+                    },
+                    0, // Empieza en el tiempo 0
+                )
+                .fromTo(
+                    "#seccion-novio",
+                    {
+                        opacity: 0,
+                        x: 30,
+                    },
+                    {
+                        opacity: 1,
+                        x: 0,
+                        duration: 1,
+                        ease: "power2.out",
+                    },
+                    0, // Empieza en el tiempo 0
+                );
+        });
+    }
+</script>
+
+<style>
+    /* Aseguramos que Cormorant SC esté disponible */
+    .font-cormorant-sc {
+        font-family: "Cormorant SC", serif;
+    }
+</style>

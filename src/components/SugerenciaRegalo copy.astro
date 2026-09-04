@@ -1,0 +1,239 @@
+<!-- ═══════════════════════════════════════════════════════════ --><!-- 🎁 SECCIÓN: SUGERENCIA DE REGALES                           --><!-- ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full py-16 sm:py-20 md:py-24 lg:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 📇 CARD DE MESA DE REGALOS -->
+        <div class="flex justify-center">
+            <div class="relative w-[300px]" id="card-regalos">
+                <!-- BOTÓN DECORATIVO SUPERIOR -->
+                <div
+                    class="absolute z-20"
+                    style="top: -30px; left: 50%; transform: translateX(-50%);"
+                >
+                    <div class="w-16 h-16" id="boton-decorativo-regalos">
+                        <img
+                            src="/imagenes/boton.webp"
+                            alt="Decoración"
+                            class="w-full h-full object-contain"
+                        />
+                    </div>
+                </div>
+
+                <!-- CARD PRINCIPAL -->
+                <div
+                    class="relative rounded-[40px] shadow-xl overflow-hidden bg-[#f5f5f5]"
+                    id="card-principal-regalos"
+                >
+                    <!-- IMAGEN DE FONDO -->
+                    <img
+                        src="/imagenes/azul.png"
+                        alt="Fondo mesa regalos"
+                        class="absolute inset-0 w-full h-full object-cover"
+                    />
+
+                    <!-- Contenido de la card -->
+                    <div
+                        class="relative px-4 pt-16 pb-12 z-10 flex flex-col items-center"
+                    >
+                        <!-- TÍTULO PRINCIPAL -->
+                        <div class="text-center mb-6" id="titulo-regalos">
+                            <h2
+                                class="font-great-vibes text-[2.25rem] text-white leading-tight"
+                            >
+                                Sugerencia de Regalos
+                            </h2>
+                        </div>
+
+                        <!-- TEXTO DESCRIPTIVO -->
+                        <div class="text-center mb-8" id="texto-regalos">
+                            <p
+                                class="font-cormorant text-xl text-white leading-relaxed"
+                            >
+                                <!-- Tu presencia es lo más importante para nosotros.
+                                Por falta de espacio, se tendrán sobres
+                                disponibles; si deseas tener un detalle, también
+                                puedes hacerlo a través del QR. <br />
+                                ¡Gracias por tu cariño! -->
+
+                                Nuestro mejor regalo será contar con tu
+                                presencia en este día tan especial. Si además
+                                deseas tener un detalle con nosotros,
+                                agradeceremos con mucho cariño tu obsequio, ya
+                                sea el día de nuestra boda o, si lo prefieres,
+                                haciéndolo llegar unos días antes a nuestro
+                                hogar en Ciudad Satélite, El Alto.
+                            </p>
+                        </div>
+
+                        <!-- BANCO + QR -->
+                        <div class="flex flex-col items-center mb-4" id="qr-code">
+                            <p
+                                class="font-cormorant text-2xl text-white font-bold tracking-widest mb-2"
+                            >
+                                BNB
+                            </p>
+                            <div class="bg-white p-3 rounded-lg">
+                                <img
+                                    src="/imagenes/qr.png"
+                                    alt="QR Mesa de Regalos"
+                                    class="w-56 h-56 object-contain"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- DATOS DEL QR -->
+                        <div id="numero-cuenta" class="text-center mb-6">
+                            <p
+                                class="font-cormorant text-lg text-white font-semibold tracking-wide"
+                            >
+                                Número de cuenta: 3102810-000-001
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 🎬 ANIMACIONES CON GSAP - SOLO AL BAJAR                     -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <script>
+        import { gsap } from "gsap";
+        import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        if (typeof window !== "undefined") {
+            document.addEventListener("DOMContentLoaded", () => {
+                // Animación del botón decorativo
+                gsap.fromTo(
+                    "#boton-decorativo-regalos",
+                    {
+                        opacity: 0,
+                        scale: 0,
+                        rotation: -180,
+                    },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        rotation: 0,
+                        duration: 1,
+                        ease: "back.out(1.7)",
+                        scrollTrigger: {
+                            trigger: "#card-regalos",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                // Animación de la card
+                gsap.fromTo(
+                    "#card-principal-regalos",
+                    {
+                        opacity: 0,
+                        y: 50,
+                        scale: 0.95,
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 1,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: "#card-regalos",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                // Animación del título
+                gsap.fromTo(
+                    "#titulo-regalos",
+                    {
+                        opacity: 0,
+                        y: -20,
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: "#card-regalos",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                // Animación del texto
+                gsap.fromTo(
+                    "#texto-regalos",
+                    {
+                        opacity: 0,
+                        y: 20,
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: 0.2,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: "#card-regalos",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                // Animación del QR
+                gsap.fromTo(
+                    "#qr-code",
+                    {
+                        opacity: 0,
+                        scale: 0.8,
+                    },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.8,
+                        delay: 0.4,
+                        ease: "back.out(1.7)",
+                        scrollTrigger: {
+                            trigger: "#card-regalos",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                // Animación del número de cuenta
+                gsap.fromTo(
+                    "#numero-cuenta",
+                    {
+                        opacity: 0,
+                        y: 20,
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: 0.6,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: "#card-regalos",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+            });
+        }
+    </script>
+</section>

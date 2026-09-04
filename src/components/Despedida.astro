@@ -1,0 +1,237 @@
+---
+// DespedidaDedicatoria.astro
+---
+
+<section class="relative w-full py-16 sm:py-20 md:py-24 lg:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-center">
+            <div class="relative w-[300px]" id="card-despedida">
+                <!-- BOTÓN DECORATIVO SUPERIOR -->
+                <div
+                    class="absolute z-20"
+                    style="top: -30px; left: 50%; transform: translateX(-50%);"
+                >
+                    <div class="w-16 h-16" id="boton-decorativo-despedida">
+                        <img
+                            src="/imagenes/boton.webp"
+                            alt="Decoración"
+                            class="w-full h-full object-contain"
+                        />
+                    </div>
+                </div>
+
+                <!-- CARD PRINCIPAL -->
+                <div
+                    class="relative rounded-[40px] shadow-xl overflow-hidden bg-[#f5f5f5]"
+                    id="card-principal-despedida"
+                >
+                    <!-- IMAGEN DE FONDO -->
+                    <img
+                        src="/imagenes/azul.png"
+                        alt="Fondo despedida"
+                        class="absolute inset-0 w-full h-full object-cover"
+                    />
+
+                    <!-- Contenido -->
+                    <div
+                        class="relative px-6 py-12 z-10 flex flex-col items-center"
+                    >
+                        <!-- TÍTULO -->
+                        <div class="text-center mb-6" id="titulo-despedida">
+                            <h2
+                                class="font-great-vibes text-[2.25rem] text-white leading-tight"
+                            >
+                                Querida Familia y Amigos
+                            </h2>
+                        </div>
+
+                        <!-- LÍNEA DECORATIVA -->
+                        <div
+                            class="flex items-center justify-center gap-2 mb-6"
+                        >
+                            <div class="w-10 h-px bg-white/40"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-white/60">
+                            </div>
+                            <div class="w-10 h-px bg-white/40"></div>
+                        </div>
+
+                        <!-- TEXTO PRINCIPAL -->
+                        <div
+                            class="text-center space-y-5 mb-8"
+                            id="texto-despedida"
+                        >
+                            <p
+                                class="font-cormorant text-xl text-white leading-relaxed"
+                            >
+                                Estamos muy felices de compartir este día tan
+                                especial, único e importante para nosotros.
+                            </p>
+                            <p
+                                class="font-cormorant text-xl text-white leading-relaxed"
+                            >
+                                Estamos seguros de que, al estar con ustedes,
+                                todo saldrá de maravilla.
+                            </p>
+                            <p
+                                class="font-cormorant text-xl text-white leading-relaxed"
+                            >
+                                Los esperamos con el corazón lleno de emoción
+                                para bailar, disfrutar, llorar de alegría y,
+                                sobre todo, celebrar nuestro amor.
+                            </p>
+                        </div>
+
+                        <!-- LÍNEA DECORATIVA -->
+                        <div
+                            class="flex items-center justify-center gap-2 mb-6"
+                        >
+                            <div class="w-10 h-px bg-white/40"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-white/60">
+                            </div>
+                            <div class="w-10 h-px bg-white/40"></div>
+                        </div>
+
+                        <!-- CORAZÓN -->
+                        <div class="mb-6" id="corazon-despedida">
+                            <svg
+                                class="w-6 h-6 text-[#c9a961]"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                                ></path>
+                            </svg>
+                        </div>
+
+                        <!-- TE ESPERAMOS -->
+                        <div class="text-center" id="te-esperamos">
+                            <p
+                                class="font-cormorant text-lg text-white/90 leading-relaxed mb-2"
+                            >
+                                Con todo nuestro cariño,
+                            </p>
+                            <p
+                                class="font-great-vibes text-[2rem] text-white leading-tight"
+                            >
+                                Chelito y Analu (Bibi)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        import { gsap } from "gsap";
+        import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        if (typeof window !== "undefined") {
+            document.addEventListener("DOMContentLoaded", () => {
+                gsap.fromTo(
+                    "#boton-decorativo-despedida",
+                    { opacity: 0, scale: 0, rotation: -180 },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        rotation: 0,
+                        duration: 1,
+                        ease: "back.out(1.7)",
+                        scrollTrigger: {
+                            trigger: "#card-despedida",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                gsap.fromTo(
+                    "#card-principal-despedida",
+                    { opacity: 0, y: 50, scale: 0.95 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 1,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: "#card-despedida",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                gsap.fromTo(
+                    "#titulo-despedida",
+                    { opacity: 0, y: -20 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: "#card-despedida",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                gsap.fromTo(
+                    "#texto-despedida",
+                    { opacity: 0, y: 20 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: 0.2,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: "#card-despedida",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                gsap.fromTo(
+                    "#corazon-despedida",
+                    { opacity: 0, scale: 0 },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.8,
+                        delay: 0.4,
+                        ease: "back.out(1.7)",
+                        scrollTrigger: {
+                            trigger: "#card-despedida",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                gsap.fromTo(
+                    "#te-esperamos",
+                    { opacity: 0, y: 20 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: 0.6,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: "#card-despedida",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+            });
+        }
+    </script>
+</section>

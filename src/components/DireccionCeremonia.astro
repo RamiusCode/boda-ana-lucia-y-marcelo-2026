@@ -1,0 +1,235 @@
+<!-- ═══════════════════════════════════════════════════════════ --><!-- ⛪ SECCIÓN: CEREMONIA                                       --><!-- ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full pt-4 pb-12 sm:py-20 md:py-24 lg:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 📇 CARD DE CEREMONIA - HORIZONTAL -->
+        <div class="flex justify-center">
+            <div
+                class="relative w-full max-w-md sm:max-w-lg md:max-w-xl"
+                id="card-ceremonia"
+            >
+                <!-- BOTÓN DECORATIVO SUPERIOR -->
+                <div
+                    class="absolute z-20"
+                    style="top: -30px; left: 50%; transform: translateX(-50%);"
+                >
+                    <div class="w-16 h-16" id="boton-decorativo-ceremonia">
+                        <img
+                            src="/imagenes/boton.webp"
+                            alt="Decoración"
+                            class="w-full h-full object-contain"
+                        />
+                    </div>
+                </div>
+
+                <div
+                    class="relative rounded-2xl shadow-xl overflow-hidden"
+                    style="background-color: #e8dcc8;"
+                >
+                    <!-- IMAGEN DE FONDO -->
+                    <img
+                        src="/imagenes/fondorojo.png"
+                        alt="Fondo ceremonia"
+                        class="absolute inset-0 w-full h-full object-cover opacity-90"
+                    />
+
+                    <!-- Contenido de la card - LAYOUT CON TÍTULO EXTENDIDO -->
+                    <div
+                        class="relative px-4 pt-14 pb-8 sm:px-8 sm:pt-16 sm:pb-10 md:px-10 md:pt-16 md:pb-12 z-10"
+                    >
+                        <!-- TÍTULO: CEREMONIA RELIGIOSA - OCUPA TODO EL ANCHO -->
+                        <div class="mb-2">
+                            <h2
+                                class="font-great-vibes text-4xl sm:text-4xl md:text-5xl texto-ceremonia text-center"
+                                id="titulo-ceremonia"
+                            >
+                                Ceremonia Religiosa
+                            </h2>
+                        </div>
+
+                        <!-- CONTENIDO INFERIOR CON ICONO Y TEXTOS -->
+                        <div class="flex items-center justify-between gap-4">
+                            <!-- LADO IZQUIERDO: ICONO DE IGLESIA -->
+                            <div class="flex-shrink-0 ml-4 sm:ml-6 md:ml-8">
+                                <div
+                                    class="w-24 h-24 sm:w-20 sm:h-20 md:w-24 md:h-24 icono-iglesia-color"
+                                >
+                                    <img
+                                        src="/imagenes/iglesia.png"
+                                        alt="Iglesia"
+                                        class="w-full h-full object-contain"
+                                        id="icono-iglesia"
+                                    />
+                                </div>
+                            </div>
+
+                            <!-- LADO DERECHO: TEXTOS Y BOTÓN -->
+                            <div class="flex-1 text-center">
+                                <!-- NOMBRE DE LA PARROQUIA -->
+                                <div class="mb-2">
+                                    <p
+                                        class="font-crimson text-xl sm:text-lg md:text-xl texto-ceremonia font-semibold"
+                                        id="nombre-parroquia"
+                                    >
+                                        Parroquia de la Inmaculada Concepción del Montículo
+                                    </p>
+                                </div>
+
+                                <!-- DIRECCIÓN -->
+                                <div class="mb-2 leading-tight">
+                                    <p
+                                        class="font-crimson text-xl sm:text-sm md:text-base texto-ceremonia"
+                                        id="direccion-parroquia"
+                                    >
+                                        Final Avenida Ecuador,<br />
+                                        zona Sopocachi<br />
+                                        (dentro del Parque Mirador del Montículo)
+                                    </p>
+                                </div>
+
+                                <!-- HORA -->
+                                <div class="mb-4">
+                                    <p
+                                        class="font-crimson text-xl sm:text-base md:text-lg leading-tight texto-ceremonia font-semibold"
+                                        id="hora-ceremonia"
+                                    >
+                                        Hora: 14:30
+                                    </p>
+                                </div>
+
+                                <!-- BOTÓN VER UBICACIÓN -->
+                                <div class="mt-4">
+                                    <a
+                                        href="https://maps.app.goo.gl/vfGYn2uKB5grB1cTA"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-block px-4 py-2 sm:px-6 sm:py-2.5 border-2 rounded-full font-crimson text-base sm:text-sm uppercase tracking-wider transition-all duration-300 btn-ubicacion-ceremonia font-semibold"
+                                        id="btn-ubicacion"
+                                    >
+                                        VER UBICACIÓN
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🎬 ANIMACIONES CON GSAP                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("⛪ Iniciando animaciones de ceremonia...");
+
+            gsap.fromTo(
+                "#boton-decorativo-ceremonia",
+                { opacity: 0, scale: 0, rotation: -180 },
+                {
+                    opacity: 1,
+                    scale: 1,
+                    rotation: 0,
+                    duration: 1,
+                    ease: "back.out(1.7)",
+                    scrollTrigger: {
+                        trigger: "#card-ceremonia",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            // 🎯 ANIMACIÓN ELEGANTE DE ENTRADA - TODO AL MISMO TIEMPO
+            gsap.fromTo(
+                "#card-ceremonia",
+                {
+                    opacity: 0,
+                    scale: 0.85,
+                    y: 60,
+                    rotationY: -15,
+                },
+                {
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                    rotationY: 0,
+                    duration: 1.2,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: "#card-ceremonia",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            console.log("⛪✨ ¡Animaciones de ceremonia activadas!");
+        });
+    }
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🎨 ESTILOS CSS                                              -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<style>
+    /* ═══════════════════════════════════════════════════════════
+       PALETA DE LOS NOVIOS
+       #0F2741 marino · #274C77 azul medio · #A3BFD9 azul claro
+       #B7956B dorado · #F2E8DA crema
+       ═══════════════════════════════════════════════════════════ */
+
+    /* Color de textos #122a4d (título y nombre de la iglesia) */
+    .texto-ceremonia {
+        color: #122a4d;
+    }
+
+    /* Color del icono de iglesia #122a4d */
+    .icono-iglesia-color {
+        filter: brightness(0) saturate(100%) invert(13%) sepia(31%)
+            saturate(1876%) hue-rotate(186deg) brightness(95%) contrast(96%);
+    }
+
+    /* DIRECCIÓN · azul medio de la paleta, para que no se mezcle
+       con el nombre de la iglesia que va justo encima */
+    #direccion-parroquia {
+        color: #274c77;
+    }
+
+    /* HORA · se queda en el azul de siempre, con un subrayado
+       dorado de la paleta para que resalte sobre la dirección */
+    #hora-ceremonia {
+        color: #122a4d;
+        display: inline-block;
+        padding-bottom: 3px;
+        border-bottom: 2px solid rgba(183, 149, 107, 0.75);
+    }
+
+    /* BOTÓN · contorno dorado en vez de azul */
+    .btn-ubicacion-ceremonia {
+        color: #122a4d;
+        border-color: #b7956b;
+    }
+    .btn-ubicacion-ceremonia:hover {
+        background-color: rgba(183, 149, 107, 0.2);
+        border-color: #b7956b;
+    }
+
+    /* Efecto hover en la card */
+    #card-ceremonia > div {
+        transition: all 0.4s ease;
+        transform-style: preserve-3d;
+    }
+
+    /* #card-ceremonia > div:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 10px rgba(18, 42, 77, 0.3);
+    } */
+</style>

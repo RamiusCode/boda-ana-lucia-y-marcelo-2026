@@ -1,0 +1,205 @@
+<!-- ═══════════════════════════════════════════════════════════ --><!-- 📅 COMPONENTE CALENDARIO - FECHA DE LA BODA                 --><!-- ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full pt-20 pb-12 sm:py-20 md:py-24 lg:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-center">
+            <div class="relative w-[280px]" id="card-calendario">
+                <!-- BOTÓN DECORATIVO SUPERIOR -->
+                <div
+                    class="absolute z-20"
+                    style="top: -30px; left: 50%; transform: translateX(-50%);"
+                >
+                    <div class="w-16 h-16" id="boton-decorativo-cal">
+                        <img
+                            src="/imagenes/boton.webp"
+                            alt="Decoración"
+                            class="w-full h-full object-contain"
+                        />
+                    </div>
+                </div>
+
+                <!-- CARD PRINCIPAL -->
+                <div
+                    class="relative rounded-lg shadow-xl overflow-hidden bg-[#f5f5f5]"
+                    id="card-principal-cal"
+                >
+                    <!-- IMAGEN DE FONDO -->
+                    <img
+                        src="/imagenes/fondoplomo.png"
+                        alt="Fondo calendario"
+                        class="absolute inset-0 w-full h-full object-cover"
+                    />
+
+                    <!-- Contenido -->
+                    <div class="relative px-4 py-10 z-10">
+                        <!-- TÍTULO -->
+                        <div class="text-center mb-6">
+                            <h2
+                                class="font-great-vibes text-[2.25rem] leading-tight text-[#122a4d]"
+                                id="titulo-calendario"
+                            >
+                                Fecha Especial
+                            </h2>
+                        </div>
+
+                        <!-- NOMBRE DEL MES -->
+                        <div class="text-center mb-4" id="seccion-mes">
+                            <h3
+                                class="font-crimson text-xl uppercase tracking-wider text-[#122a4d] font-semibold"
+                                id="nombre-mes"
+                            >
+                            </h3>
+                            <p
+                                class="font-cormorant-sc text-sm text-[#274c77] opacity-80 mt-1"
+                                id="anio-texto"
+                            >
+                            </p>
+                        </div>
+
+                        <!-- DÍAS DE LA SEMANA -->
+                        <div
+                            class="grid grid-cols-7 gap-1 mb-2"
+                            id="seccion-dias-semana"
+                        >
+                            {
+                                ["D", "L", "M", "M", "J", "V", "S"].map((d) => (
+                                    <div class="text-center font-crimson text-xs text-[#122a4d] font-bold opacity-60">
+                                        {d}
+                                    </div>
+                                ))
+                            }
+                        </div>
+
+                        <!-- DÍAS DEL MES -->
+                        <div
+                            class="grid grid-cols-7 gap-1"
+                            id="dias-container-cal"
+                        >
+                            <!-- Se llenará con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ═══════════════════════════════════════════════════════════
+    // ⭐ CONFIGURACIÓN DE LA FECHA ⭐
+    // ═══════════════════════════════════════════════════════════
+    // 🔧 EDITA ESTAS 3 VARIABLES PARA CAMBIAR LA FECHA:
+
+    const DIA_ESPECIAL = 10; // ← Día (1-31)
+    const MES_ESPECIAL = 10; // ← Mes (1-12)
+    const AÑO_ESPECIAL = 2026; // ← Año
+
+    // ═══════════════════════════════════════════════════════════
+
+    const NOMBRES_MESES = [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+    ];
+
+    function generarCalendario() {
+        document.getElementById("nombre-mes").textContent =
+            NOMBRES_MESES[MES_ESPECIAL - 1];
+        document.getElementById("anio-texto").textContent = AÑO_ESPECIAL;
+
+        const primerDia = new Date(AÑO_ESPECIAL, MES_ESPECIAL - 1, 1).getDay();
+        const ultimoDia = new Date(AÑO_ESPECIAL, MES_ESPECIAL, 0).getDate();
+        const container = document.getElementById("dias-container-cal");
+        container.innerHTML = "";
+
+        for (let i = 0; i < primerDia; i++) {
+            container.appendChild(document.createElement("div"));
+        }
+
+        for (let dia = 1; dia <= ultimoDia; dia++) {
+            const diaDiv = document.createElement("div");
+            if (dia === DIA_ESPECIAL) {
+                diaDiv.className =
+                    "aspect-square flex items-center justify-center rounded-md bg-gradient-to-br from-[#122a4d] to-[#1e3f73] shadow-lg dia-cal";
+                diaDiv.id = "dia-especial-cal";
+                diaDiv.innerHTML = `<span class="font-crimson text-lg text-white font-bold">${dia}</span>`;
+            } else {
+                diaDiv.className =
+                    "aspect-square flex items-center justify-center rounded-md hover:bg-[#122a4d]/10 transition-all dia-cal";
+                diaDiv.innerHTML = `<span class="font-crimson text-sm text-[#122a4d]">${dia}</span>`;
+            }
+            container.appendChild(diaDiv);
+        }
+    }
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            generarCalendario();
+
+            gsap.set("#boton-decorativo-cal", {
+                opacity: 0,
+                scale: 0,
+                rotation: -180,
+            });
+            gsap.set("#card-principal-cal", { opacity: 0, y: 50, scale: 0.95 });
+            gsap.set("#titulo-calendario", { opacity: 0, y: -20 });
+            gsap.set("#seccion-mes", { opacity: 0, y: 10 });
+            gsap.set("#seccion-dias-semana", { opacity: 0 });
+            gsap.set(".dia-cal", { opacity: 0, scale: 0.8 });
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#card-calendario",
+                    start: "top 80%",
+                    toggleActions: "play none none reset",
+                },
+            });
+            tl.to("#boton-decorativo-cal", { opacity: 1, scale: 1, rotation: 0, duration: 1, ease: "back.out(1.7)" }, 0)
+              .to("#card-principal-cal", { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power3.out" }, 0)
+              .to("#titulo-calendario", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 0.2)
+              .to("#seccion-mes", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.3)
+              .to("#seccion-dias-semana", { opacity: 1, duration: 0.4 }, 0.4)
+              .to(".dia-cal", { opacity: 1, scale: 1, duration: 0.3, stagger: 0.02, ease: "back.out(1.2)" }, 0.5);
+
+            gsap.to("#dia-especial-cal", {
+                scale: 1.08,
+                duration: 2,
+                ease: "sine.inOut",
+                yoyo: true,
+                repeat: -1,
+                delay: 1.5,
+            });
+        });
+    }
+</script>
+
+<style>
+    #dia-especial-cal {
+        box-shadow: 0 6px 20px rgba(18, 42, 77, 0.4);
+        position: relative;
+    }
+    #dia-especial-cal::after {
+        content: "";
+        position: absolute;
+        inset: -3px;
+        border-radius: 0.4rem;
+        border: 2px solid rgba(183, 149, 107, 0.85);
+        pointer-events: none;
+    }
+    .font-cormorant-sc {
+        font-family: "Cormorant SC", serif;
+    }
+</style>

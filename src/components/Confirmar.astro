@@ -1,0 +1,533 @@
+---
+// Confirmar.astro
+// Datos por invitado, se pasan desde la página:
+//   <Confirmar nombreInvitado="Familia Rodríguez Vargas" numeroPases={3} />
+interface Props {
+    nombreInvitado?: string;
+    numeroPases?: number;
+}
+
+const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
+    Astro.props;
+---
+
+<!-- ═══════════════════════════════════════════════════════════ --><!-- 💬 SECCIÓN: CONFIRMA TU ASISTENCIA                         --><!-- ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full py-16 sm:py-20 md:py-24 lg:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 📇 CARD DE CONFIRMAR ASISTENCIA -->
+        <div class="flex justify-center">
+            <div class="relative w-[300px]" id="card-confirmar">
+                <!-- BOTÓN DECORATIVO SUPERIOR -->
+                <div
+                    class="absolute z-20"
+                    style="top: -30px; left: 50%; transform: translateX(-50%);"
+                >
+                    <div
+                        class="w-16 h-16 sm:w-20 sm:h-20"
+                        id="boton-decorativo-confirmar"
+                    >
+                        <img
+                            src="/imagenes/boton.webp"
+                            alt="Decoración"
+                            class="w-full h-full object-contain"
+                        />
+                    </div>
+                </div>
+
+                <!-- CARD PRINCIPAL -->
+                <div
+                    class="relative rounded-[40px] shadow-xl overflow-hidden bg-[#f5f5f5]"
+                    id="card-principal-confirmar"
+                >
+                    <!-- IMAGEN DE FONDO -->
+                    <img
+                        src="/imagenes/fondoplomo.png"
+                        alt="Fondo confirmar"
+                        class="absolute inset-0 w-full h-full object-cover"
+                    />
+
+                    <!-- Contenido de la card -->
+                    <div
+                        class="relative px-6 py-12 sm:px-8 sm:py-14 z-10 flex flex-col items-center justify-center"
+                    >
+                        <!-- TÍTULO PRINCIPAL -->
+                        <div class="text-center mb-6" id="titulo-confirmar">
+                            <h2
+                                class="font-crimson text-2xl sm:text-3xl md:text-4xl text-[#122a4d] uppercase tracking-wide font-bold"
+                            >
+                                Confirma Tu<br />Asistencia
+                            </h2>
+                        </div>
+
+                        <!-- TEXTO DESCRIPTIVO -->
+                        <div class="text-center mb-8" id="texto-confirmar">
+                            <p
+                                class="font-crimson text-xl sm:text-lg text-[#274c77] leading-relaxed"
+                            >
+                                Será de mucha alegría<br />
+                                para nosotros contar<br />
+                                con tu compañía en este<br />
+                                día tan importante.
+                            </p>
+                        </div>
+                        <!-- BOTONES FORMULARIO -->
+                        <div
+                            class="flex flex-col items-center gap-4 w-full"
+                            id="boton-formulario-confirmar"
+                        >
+                            <!-- BOTÓN CONFIRMAR (ABRE EL MODAL) -->
+                            <button
+                                type="button"
+                                id="btn-abrir-confirmacion"
+                                class="inline-flex w-full max-w-xs
+                            items-center justify-center gap-2 px-6 py-3 sm:px-8
+                            sm:py-4 bg-[#122a4d] border-2 border-[#b7956b] rounded-full shadow-lg
+                            hover:shadow-xl hover:bg-[#1a3d6b] transition-all
+                            duration-300 cursor-pointer"
+                                aria-label="Confirmar asistencia"
+                            >
+                                <svg
+                                    class="w-5 h-5 sm:w-6 sm:h-6 text-white shrink-0"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                    ></path>
+                                </svg>
+
+                                <span
+                                    class="font-crimson text-base sm:text-lg text-white font-semibold uppercase tracking-wider whitespace-nowrap"
+                                >
+                                    Confirmar Asistencia
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 🎬 ANIMACIONES CON GSAP                                     -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <script>
+        import { gsap } from "gsap";
+        import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        if (typeof window !== "undefined") {
+            document.addEventListener("DOMContentLoaded", () => {
+                console.log(
+                    "💬 Iniciando animaciones de confirmar asistencia...",
+                );
+
+                // Animación del botón decorativo
+                gsap.fromTo(
+                    "#boton-decorativo-confirmar",
+                    {
+                        opacity: 0,
+                        scale: 0,
+                        rotation: -180,
+                    },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        rotation: 0,
+                        duration: 1,
+                        ease: "back.out(1.7)",
+                        scrollTrigger: {
+                            trigger: "#card-confirmar",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                // Animación de la card
+                gsap.fromTo(
+                    "#card-principal-confirmar",
+                    {
+                        opacity: 0,
+                        y: 50,
+                        scale: 0.95,
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 1,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: "#card-confirmar",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                // Animación del título
+                gsap.fromTo(
+                    "#titulo-confirmar",
+                    {
+                        opacity: 0,
+                        y: -20,
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: 0.3,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: "#card-confirmar",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                // Animación del texto
+                gsap.fromTo(
+                    "#texto-confirmar",
+                    {
+                        opacity: 0,
+                        y: 20,
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: 0.5,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: "#card-confirmar",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                // Animación del botón
+                gsap.fromTo(
+                    "#boton-formulario-confirmar",
+                    {
+                        opacity: 0,
+                        scale: 0.8,
+                        y: 20,
+                    },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: 0.7,
+                        ease: "back.out(1.5)",
+                        scrollTrigger: {
+                            trigger: "#card-confirmar",
+                            start: "top 80%",
+                            toggleActions: "play none none reset",
+                        },
+                    },
+                );
+
+                // Animación continua del botón decorativo
+                gsap.to("#boton-decorativo-confirmar", {
+                    y: -5,
+                    duration: 2,
+                    ease: "sine.inOut",
+                    yoyo: true,
+                    repeat: -1,
+                    delay: 1,
+                });
+
+                // Animación continua del botón formulario
+                gsap.to("#boton-formulario-confirmar a", {
+                    y: -3,
+                    duration: 2,
+                    ease: "sine.inOut",
+                    yoyo: true,
+                    repeat: -1,
+                    delay: 1,
+                });
+
+                console.log(
+                    "💬✨ ¡Animaciones de confirmar asistencia activadas!",
+                );
+            });
+        }
+    </script>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 🎨 ESTILOS CSS                                              -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <style>
+        /* Efecto hover en la card */
+        #card-principal-confirmar {
+            transition: all 0.4s ease;
+        }
+
+        #card-principal-confirmar:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(18, 42, 77, 0.25);
+        }
+
+        /* Efecto en el botón */
+        #boton-formulario-confirmar a:focus {
+            outline: none;
+        }
+
+        #boton-formulario-confirmar a:active {
+            outline: none;
+            transform: scale(0.95);
+        }
+    </style>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 💌 MODAL DE CONFIRMACIÓN DE ASISTENCIA                      -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div
+    id="modal-confirmacion"
+    class="fixed inset-0 z-[100] hidden items-center justify-center p-4"
+    style="opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(8px);"
+    data-nombre={nombreInvitado}
+    data-pases={numeroPases}
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-titulo"
+>
+    <!-- FONDO -->
+    <div class="absolute inset-0 bg-[#122a4d]/50" id="modal-fondo"></div>
+
+    <!-- CAJA -->
+    <div class="relative w-full max-w-sm z-10" id="modal-caja">
+        <div
+            class="relative rounded-[32px] shadow-2xl overflow-hidden bg-[#f5f5f5]"
+        >
+            <img
+                src="/imagenes/fondoplomo.png"
+                alt=""
+                class="absolute inset-0 w-full h-full object-cover"
+            />
+
+            <div class="relative px-7 py-9 z-10 text-center">
+                <!-- CERRAR -->
+                <button
+                    type="button"
+                    id="modal-cerrar"
+                    class="absolute top-2 right-4 text-2xl leading-none text-[#122a4d]/45 hover:text-[#122a4d] transition-colors cursor-pointer"
+                    aria-label="Cerrar"
+                >
+                    &times;
+                </button>
+
+                <!-- ═══ PASO 1: CONFIRMACIÓN ═══ -->
+                <div id="paso-confirmar">
+                    <p
+                        class="font-crimson text-[15px] uppercase tracking-[0.08em] text-[#274c77] mb-3"
+                        id="modal-titulo"
+                    >
+                        Confirmación de asistencia
+                    </p>
+
+                    <p
+                        class="font-great-vibes text-[2rem] leading-tight text-[#122a4d] mb-4"
+                    >
+                        {nombreInvitado}
+                    </p>
+
+                    <!-- SEPARADOR DORADO -->
+                    <div class="flex items-center justify-center w-full mb-5">
+                        <div class="flex-1 h-px bg-[#b7956b]/50"></div>
+                        <div class="mx-3 text-[#b7956b] text-sm">&#10038;</div>
+                        <div class="flex-1 h-px bg-[#b7956b]/50"></div>
+                    </div>
+
+                    <p class="font-crimson text-base text-[#274c77] mb-4">
+                        {
+                            numeroPases === 1
+                                ? "Tienes 1 pase reservado."
+                                : `Tienes ${numeroPases} pases reservados.`
+                        }
+                    </p>
+
+                    <div class="flex flex-col items-center gap-3">
+                        <button
+                            type="button"
+                            id="btn-confirmar-final"
+                            class="w-full px-6 py-3 bg-[#122a4d] border-2 border-[#b7956b] rounded-full font-crimson text-base text-white font-semibold uppercase tracking-wider shadow-lg hover:bg-[#1a3d6b] transition-all duration-300 cursor-pointer"
+                        >
+                            Confirmar asistencia
+                        </button>
+                        <button
+                            type="button"
+                            id="btn-no-asistire"
+                            class="font-crimson text-sm text-[#274c77] underline underline-offset-4 hover:text-[#122a4d] transition-colors cursor-pointer"
+                        >
+                            No podré asistir
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ═══ PASO 2: AGRADECIMIENTO ═══ -->
+                <div id="paso-gracias" class="hidden">
+                    <div class="flex justify-center mb-4">
+                        <div
+                            class="w-16 h-16 rounded-full bg-[#f2e8da] border-2 border-[#b7956b]/60 flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-8 h-8 text-[#b7956b]"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <p
+                        class="font-great-vibes text-[2rem] leading-tight text-[#122a4d] mb-3"
+                        id="titulo-gracias"
+                    >
+                        ¡Gracias!
+                    </p>
+
+                    <p
+                        class="font-crimson text-base text-[#274c77] leading-relaxed mb-6"
+                        id="texto-gracias"
+                    >
+                    </p>
+
+                    <button
+                        type="button"
+                        id="btn-cerrar-gracias"
+                        class="px-6 py-2.5 border-2 border-[#b7956b] rounded-full font-crimson text-sm text-[#122a4d] font-semibold uppercase tracking-wider bg-[#f2e8da]/50 hover:bg-[#b7956b]/20 transition-all duration-300 cursor-pointer"
+                    >
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ═══════════════════════════════════════════════════════════
+    // ⚠️  DÓNDE SE GUARDA LA CONFIRMACIÓN
+    // Pegá aquí la URL que reciba los datos (Google Apps Script,
+    // Formspree, una API propia...). Si queda vacío, el modal
+    // muestra el agradecimiento pero la confirmación NO se
+    // registra en ningún lado.
+    // ═══════════════════════════════════════════════════════════
+    const ENDPOINT_CONFIRMACION = "";
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById("modal-confirmacion");
+            const abrir = document.getElementById("btn-abrir-confirmacion");
+            if (!modal || !abrir) return;
+
+            const cerrar = document.getElementById("modal-cerrar");
+            const fondo = document.getElementById("modal-fondo");
+            const btnConfirmar = document.getElementById("btn-confirmar-final");
+            const btnNo = document.getElementById("btn-no-asistire");
+            const btnCerrarGracias =
+                document.getElementById("btn-cerrar-gracias");
+            const pasoForm = document.getElementById("paso-confirmar");
+            const pasoGracias = document.getElementById("paso-gracias");
+            const tituloGracias = document.getElementById("titulo-gracias");
+            const textoGracias = document.getElementById("texto-gracias");
+
+            const nombre = modal.dataset.nombre || "";
+            const pases = parseInt(modal.dataset.pases || "1", 10);
+
+            // ── ABRIR / CERRAR ──
+            function abrirModal() {
+                modal.classList.remove("hidden");
+                modal.classList.add("flex");
+                document.body.style.overflow = "hidden";
+                requestAnimationFrame(() => {
+                    modal.style.opacity = "1";
+                });
+            }
+            function cerrarModal() {
+                modal.style.opacity = "0";
+                document.body.style.overflow = "";
+                setTimeout(() => {
+                    modal.classList.add("hidden");
+                    modal.classList.remove("flex");
+                }, 300);
+            }
+
+            abrir.addEventListener("click", abrirModal);
+            cerrar?.addEventListener("click", cerrarModal);
+            fondo?.addEventListener("click", cerrarModal);
+            btnCerrarGracias?.addEventListener("click", cerrarModal);
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && !modal.classList.contains("hidden"))
+                    cerrarModal();
+            });
+
+            // ── ENVÍO ──
+            async function registrar(asistira, cantidad) {
+                if (!ENDPOINT_CONFIRMACION) return;
+                try {
+                    await fetch(ENDPOINT_CONFIRMACION, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            nombre,
+                            asistira,
+                            cantidad,
+                            pasesAsignados: pases,
+                            fecha: new Date().toISOString(),
+                        }),
+                    });
+                } catch (err) {
+                    console.error("No se pudo registrar la confirmación", err);
+                }
+            }
+
+            function mostrarGracias(titulo, texto) {
+                pasoForm.classList.add("hidden");
+                pasoGracias.classList.remove("hidden");
+                tituloGracias.textContent = titulo;
+                textoGracias.textContent = texto;
+            }
+
+            btnConfirmar?.addEventListener("click", () => {
+                btnConfirmar.disabled = true;
+                btnConfirmar.textContent = "Enviando...";
+                registrar(true, pases).finally(() => {
+                    mostrarGracias(
+                        "¡Gracias!",
+                        pases === 1
+                            ? "Tu asistencia quedó confirmada. Nos vemos el sábado 10 de octubre."
+                            : `Quedaron confirmadas ${pases} asistencias. Nos vemos el sábado 10 de octubre.`,
+                    );
+                });
+            });
+
+            btnNo?.addEventListener("click", () => {
+                registrar(false, 0).finally(() => {
+                    mostrarGracias(
+                        "Te extrañaremos",
+                        "Gracias por avisarnos. Lamentamos que no puedas acompañarnos en este día.",
+                    );
+                });
+            });
+        });
+    }
+</script>

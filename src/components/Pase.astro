@@ -1,0 +1,246 @@
+---
+// Pase.astro
+interface Props {
+    numeroPases: number;
+    nombreInvitado?: string;
+}
+
+const { numeroPases = 3, nombreInvitado = "Familia Rodríguez Vargas" } =
+    Astro.props;
+
+// El nombre va SIEMPRE en una sola línea. Como la card es de ancho
+// fijo (300px), el cuerpo se ajusta al largo del nombre por tramos.
+const largo = nombreInvitado.length;
+const tamanoNombre =
+    largo <= 14
+        ? "2.2rem"
+        : largo <= 20
+          ? "1.9rem"
+          : largo <= 26
+            ? "1.6rem"
+            : largo <= 34
+              ? "1.3rem"
+              : "1.1rem";
+---
+
+<section class="relative w-full pt-10 pb-10 sm:py-20 md:py-24 lg:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-center">
+            <div class="relative w-[300px]" id="card-pase">
+
+                <!-- BOTÓN DECORATIVO SUPERIOR -->
+                <div
+                    class="absolute z-20"
+                    style="top: -30px; left: 50%; transform: translateX(-50%);"
+                >
+                    <div class="w-16 h-16" id="boton-decorativo-pase">
+                        <img
+                            src="/imagenes/boton.webp"
+                            alt="Decoración"
+                            class="w-full h-full object-contain"
+                        />
+                    </div>
+                </div>
+
+                <!-- CARD PRINCIPAL -->
+                <div
+                    class="relative rounded-[40px] shadow-xl overflow-hidden"
+                    id="card-principal-pase"
+                >
+                    <!-- IMAGEN DE FONDO -->
+                    <img
+                        src="/imagenes/azul.png"
+                        alt="Fondo pase"
+                        class="absolute inset-0 w-full h-full object-cover"
+                    />
+
+                    <!-- Contenido de la card -->
+                    <div class="relative px-6 pt-16 pb-10 z-10 text-center">
+
+                        <!-- NOMBRE DEL INVITADO (una sola línea) -->
+                        <div class="mb-4" id="titulo-pase">
+                            <p
+                                class="font-crimson text-base uppercase text-white/75 mb-4"
+                            >
+                                Con mucho cariño para
+                            </p>
+                            <h2
+                                class="font-great-vibes text-white leading-tight whitespace-nowrap"
+                                style={`font-size: ${tamanoNombre};`}
+                            >
+                                {nombreInvitado}
+                            </h2>
+                        </div>
+
+                        <!-- SEPARADOR DORADO -->
+                        <div class="flex items-center justify-center gap-2 mb-4">
+                            <div class="w-10 h-px bg-[#b7956b]/70"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-[#b7956b]"></div>
+                            <div class="w-10 h-px bg-[#b7956b]/70"></div>
+                        </div>
+
+                        <!-- FRASE + NÚMERO DE PASES -->
+                        <div id="numero-pase">
+                            <p
+                                class="font-crimson text-lg leading-snug text-white/90"
+                            >
+                                Hemos reservado
+                            </p>
+                            <p
+                                class="text-white font-bold leading-none mt-2"
+                                style="font-size: 3.75rem; text-shadow: 0 4px 16px rgba(0,0,0,0.2);"
+                            >
+                                {numeroPases}
+                            </p>
+                        </div>
+
+                        <!-- PASES EN SU HONOR -->
+                        <div class="mt-2" id="texto-pase">
+                            <p
+                                class="font-crimson text-lg leading-relaxed text-white/90 italic"
+                            >
+                                {numeroPases === 1 ? "pase" : "pases"} en su honor
+                            </p>
+                        </div>
+
+                        <!-- ICONOS DE PERSONAS -->
+                        <div class="flex justify-center gap-3 mt-6" id="iconos-pase">
+                            {
+                                Array.from({ length: numeroPases }).map((_, index) => (
+                                    <div
+                                        class="w-9 h-9 rounded-full bg-white/20 border border-white/40 flex items-center justify-center"
+                                        style={`animation-delay: ${index * 0.2}s;`}
+                                    >
+                                        <svg
+                                            class="w-5 h-5 text-white"
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                        </svg>
+                                    </div>
+                                ))
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🎬 ANIMACIONES CON GSAP                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            gsap.fromTo(
+                "#boton-decorativo-pase",
+                { opacity: 0, scale: 0, rotation: -180 },
+                {
+                    opacity: 1,
+                    scale: 1,
+                    rotation: 0,
+                    duration: 1,
+                    ease: "back.out(1.7)",
+                    scrollTrigger: {
+                        trigger: "#card-pase",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            gsap.fromTo(
+                "#card-principal-pase",
+                { opacity: 0, y: 50, scale: 0.95 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: "#card-pase",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            gsap.fromTo(
+                "#titulo-pase",
+                { opacity: 0, y: -20 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: "#card-pase",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            gsap.fromTo(
+                "#numero-pase",
+                { opacity: 0, scale: 0.8 },
+                {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1,
+                    delay: 0.2,
+                    ease: "back.out(1.4)",
+                    scrollTrigger: {
+                        trigger: "#card-pase",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            gsap.fromTo(
+                "#texto-pase",
+                { opacity: 0, y: 20 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    delay: 0.4,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: "#card-pase",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            gsap.fromTo(
+                "#iconos-pase",
+                { opacity: 0, y: 20 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    delay: 0.6,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: "#card-pase",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+        });
+    }
+</script>

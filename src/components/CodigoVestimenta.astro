@@ -1,0 +1,313 @@
+<!-- ═══════════════════════════════════════════════════════════ --><!-- 👔 SECCIÓN: DRESS CODE                                      --><!-- ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full pt-10 pb-10 sm:py-20 md:py-24 lg:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 📇 CARD DE DRESS CODE -->
+        <div class="flex justify-center">
+            <div class="relative w-[300px]" id="card-dresscode">
+                <!-- BOTÓN DECORATIVO SUPERIOR -->
+                <div
+                    class="absolute z-20"
+                    style="top: -30px; left: 50%; transform: translateX(-50%);"
+                >
+                    <div class="w-16 h-16" id="boton-decorativo-dresscode">
+                        <img
+                            src="/imagenes/boton.webp"
+                            alt="Decoración"
+                            class="w-full h-full object-contain"
+                        />
+                    </div>
+                </div>
+
+                <!-- CARD PRINCIPAL -->
+                <div
+                    class="relative rounded-[40px] shadow-xl overflow-hidden bg-[#f5f5f5]"
+                    id="card-principal-dresscode"
+                >
+                    <!-- IMAGEN DE FONDO -->
+                    <img
+                        src="/imagenes/fondorojo.png"
+                        alt="Fondo dress code"
+                        class="absolute inset-0 w-full h-full object-cover"
+                    />
+
+                    <!-- Contenido de la card -->
+                    <div class="relative px-2 pt-16 pb-10 z-10">
+                        <!-- TÍTULO PRINCIPAL -->
+                        <div class="text-center mb-6" id="titulo-dresscode">
+                            <h2
+                                class="font-great-vibes text-[2.5rem] text-[#122a4d] leading-none mb-2"
+                            >
+                                Dress Code
+                            </h2>
+                            <p
+                                class="font-crimson text-lg uppercase tracking-widest text-[#274c77] font-semibold"
+                            >
+                                FORMAL – ELEGANTE
+                            </p>
+                        </div>
+
+                        <!-- SECCIÓN: ELLOS Y ELLAS -->
+                        <div
+                            class="flex justify-center gap-4 mb-2"
+                            id="seccion-vestimenta"
+                        >
+                            <!-- ELLOS -->
+                            <div class="text-center flex-1" id="seccion-ellos">
+                                <div class="mb-3">
+                                    <img
+                                        src="/imagenes/trajehombre.png"
+                                        alt="Traje Formal"
+                                        class="w-[43px] h-auto mx-auto icono-dresscode"
+                                    />
+                                </div>
+                                <h3
+                                    class="font-crimson text-lg uppercase tracking-wider text-[#274c77] font-bold mb-2"
+                                >
+                                    CABALLEROS
+                                </h3>
+                                <!-- <p
+                                    class="font-crimson text-lg leading-tight text-[#122a4d]"
+                                >
+                                    Traje Formal<br />
+                                    NO Azul marino<br />
+                                    Corbata o<br />
+                                    Zapatos
+                                </p> -->
+                            </div>
+
+                            <!-- ELLAS -->
+                            <div class="text-center flex-1" id="seccion-ellas">
+                                <div class="mb-3">
+                                    <img
+                                        src="/imagenes/trajemujer.png"
+                                        alt="Vestido Largo"
+                                        class="w-20 h-auto mx-auto icono-dresscode"
+                                    />
+                                </div>
+                                <h3
+                                    class="font-crimson text-lg uppercase tracking-wider text-[#274c77] font-bold mb-2"
+                                >
+                                    DAMAS
+                                </h3>
+                                <!-- <p
+                                    class="font-crimson text-lg leading-tight text-[#122a4d]"
+                                >
+                                    Vestido Largo, sobre<br />
+                                    o bajo la rodilla<br />
+                                    Accesorios a gusto<br />
+                                    Tacones
+                                </p> -->
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN: COLORES -->
+                        <!-- <div class="text-center mb-6" id="seccion-colores">
+                            <h3
+                                class="font-crimson text-base uppercase tracking-wider text-[#122a4d] font-bold mb-3"
+                            >
+                                COLORES
+                            </h3>
+                            <div class="flex justify-center gap-3 mb-2">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-black border-2 border-[#122a4d]"
+                                >
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gray-400 border-2 border-[#122a4d]"
+                                >
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-yellow-400 border-2 border-[#122a4d]"
+                                >
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <!-- NOTA FINAL -->
+                        <div class="text-center" id="nota-final">
+                            <p
+                                class="font-crimson text-lg leading-relaxed text-[#122a4d] italic"
+                            >
+                                NO ASISTIR DE BLANCO O BEIGE,<br />
+                                estos colores están reservados<br />
+                                para la novia.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🎨 ESTILOS PARA LOS ICONOS                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<style>
+    .icono-dresscode {
+        filter: brightness(0) saturate(100%) invert(14%) sepia(50%)
+            saturate(1847%) hue-rotate(188deg) brightness(95%) contrast(95%);
+    }
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🎬 ANIMACIONES CON GSAP - SOLO AL BAJAR (SIN PERDER CONTENIDO) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            // Animación del botón decorativo
+            gsap.fromTo(
+                "#boton-decorativo-dresscode",
+                {
+                    opacity: 0,
+                    scale: 0,
+                    rotation: -180,
+                },
+                {
+                    opacity: 1,
+                    scale: 1,
+                    rotation: 0,
+                    duration: 1,
+                    ease: "back.out(1.7)",
+                    scrollTrigger: {
+                        trigger: "#card-dresscode",
+                        start: "top 80%",
+                        toggleActions: "play none none reset", // ✅ Solo play al bajar
+                    },
+                },
+            );
+
+            // Animación de la card
+            gsap.fromTo(
+                "#card-principal-dresscode",
+                {
+                    opacity: 0,
+                    y: 50,
+                    scale: 0.95,
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: "#card-dresscode",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            // Animación del título
+            gsap.fromTo(
+                "#titulo-dresscode",
+                {
+                    opacity: 0,
+                    y: -20,
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: "#card-dresscode",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            // Animación ellos (desde la izquierda)
+            gsap.fromTo(
+                "#seccion-ellos",
+                {
+                    opacity: 0,
+                    x: -30,
+                },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.8,
+                    delay: 0.2,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: "#card-dresscode",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            // Animación ellas (desde la derecha)
+            gsap.fromTo(
+                "#seccion-ellas",
+                {
+                    opacity: 0,
+                    x: 30,
+                },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.8,
+                    delay: 0.2,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: "#card-dresscode",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            // Animación de colores
+            gsap.fromTo(
+                "#seccion-colores",
+                {
+                    opacity: 0,
+                    y: 20,
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    delay: 0.4,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: "#card-dresscode",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            // Animación nota final
+            gsap.fromTo(
+                "#nota-final",
+                {
+                    opacity: 0,
+                    y: 20,
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    delay: 0.6,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: "#card-dresscode",
+                        start: "top 80%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+        });
+    }
+</script>

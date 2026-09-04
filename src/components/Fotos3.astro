@@ -1,0 +1,191 @@
+<!-- ═══════════════════════════════════════════════════════════ --><!-- 📸 SECCIÓN: GALERÍA DE FOTOS                                --><!-- ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full py-2 sm:py-20 md:py-24 lg:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- CONTENEDOR DE FOTO ÚNICA -->
+        <div class="relative w-full max-w-md mx-auto opacity-0" id="foto3-wrapper">
+            <div
+                id="foto1"
+                class="relative w-full aspect-[4/5] rounded-lg shadow-lg overflow-hidden cursor-pointer transition-shadow duration-500 hover:shadow-2xl"
+            >
+                <img
+                    id="foto3-img"
+                    src="/imagenes/foto4.webp"
+                    alt="Foto"
+                    class="w-full h-full object-cover"
+                    style="object-position: 63% center; transform-origin: center center; will-change: transform;"
+                />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🖼️ MODAL CON FONDO BLANCO ELEGANTE                         -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div
+    id="modalFoto"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4"
+    style="opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(10px);"
+>
+    <!-- FONDO BLANCO CON TOQUE PLOMO -->
+    <div
+        class="absolute inset-0 bg-gradient-to-br from-gray-50 via-gray-100 to-white opacity-98"
+    >
+    </div>
+
+    <!-- CONTENIDO DEL MODAL -->
+    <div class="relative max-w-5xl w-full z-10">
+        <!-- BOTÓN CERRAR -->
+        <button
+            id="btnCerrar"
+            class="absolute -top-12 right-0 text-gray-700 hover:text-gray-900 transition-all duration-200 text-4xl font-bold hover:scale-110 hover:rotate-90 drop-shadow-lg"
+            aria-label="Cerrar modal"
+        >
+            ✕
+        </button>
+        <!-- IMAGEN PRINCIPAL NÍTIDA -->
+        <img
+            id="modalImage"
+            src=""
+            alt="Foto ampliada"
+            class="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-xl"
+        />
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🎬 ENTRADA CON ZOOM (GSAP) - igual que Galeria.astro        -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            const marco = document.getElementById("foto1");
+            const img = document.getElementById("foto3-img");
+            if (!marco || !img) return;
+
+            // ── ENTRADA CON ZOOM (la misma que Galeria.astro) ──
+            gsap.set("#foto3-wrapper", { opacity: 0, scale: 0.96 });
+
+            ScrollTrigger.create({
+                trigger: "#foto3-wrapper",
+                start: "top 85%",
+                onEnter: () => {
+                    gsap.to("#foto3-wrapper", {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 1,
+                        ease: "power3.out",
+                    });
+                },
+                onLeaveBack: () => {
+                    gsap.set("#foto3-wrapper", { opacity: 0, scale: 0.96 });
+                },
+            });
+
+            // Hover: acercamiento sutil (sin pelear con el zoom de entrada)
+            marco.addEventListener("mouseenter", () => {
+                gsap.to(img, { scale: 1.06, duration: 0.8, ease: "power2.out" });
+            });
+            marco.addEventListener("mouseleave", () => {
+                gsap.to(img, { scale: 1, duration: 0.8, ease: "power2.out" });
+            });
+        });
+    }
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 📦 LIBRERÍA AOS PARA ANIMACIONES                            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+/>
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
+></script>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 📜 JAVASCRIPT PARA EL MODAL Y ANIMACIONES                   -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script is:inline>
+    // Inicializar AOS
+    AOS.init({
+        duration: 800,
+        easing: "ease-in-out",
+        once: true,
+        mirror: false,
+        offset: 100,
+    });
+
+    // Esperar a que el DOM esté listo
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("modalFoto");
+        const modalImage = document.getElementById("modalImage");
+        const foto1 = document.getElementById("foto1");
+        const btnCerrar = document.getElementById("btnCerrar");
+
+        // Función para abrir modal
+        function abrirModal(imageSrc) {
+            modalImage.src = imageSrc;
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            document.body.style.overflow = "hidden";
+
+            setTimeout(() => {
+                modal.style.opacity = "1";
+            }, 10);
+        }
+
+        // Función para cerrar modal
+        function cerrarModal() {
+            modal.style.opacity = "0";
+            setTimeout(() => {
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+                document.body.style.overflow = "auto";
+            }, 300);
+        }
+
+        // Click en foto
+        if (foto1) {
+            foto1.addEventListener("click", function () {
+                abrirModal("/imagenes/foto4.webp");
+            });
+        }
+
+        // Click en botón cerrar
+        if (btnCerrar) {
+            btnCerrar.addEventListener("click", function (e) {
+                e.stopPropagation();
+                cerrarModal();
+            });
+        }
+
+        // Click en el fondo para cerrar
+        if (modal) {
+            modal.addEventListener("click", function (e) {
+                if (e.target === modal) {
+                    cerrarModal();
+                }
+            });
+        }
+
+        // Prevenir cierre al clickear la imagen
+        if (modalImage) {
+            modalImage.addEventListener("click", function (e) {
+                e.stopPropagation();
+            });
+        }
+
+        // Cerrar con tecla ESC
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                cerrarModal();
+            }
+        });
+    });
+</script>

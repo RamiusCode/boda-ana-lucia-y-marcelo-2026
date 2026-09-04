@@ -1,0 +1,61 @@
+<!-- ═══════════════════════════════════════════════════════════ --><!-- 📖 SECCIÓN: CITA BÍBLICA                                    --><!-- ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full py-6 sm:py-10" id="seccion-cita">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col items-center text-center" id="cita-container">
+            <p
+                class="font-great-vibes text-2xl sm:text-3xl md:text-4xl text-[#122a4d] leading-relaxed"
+                id="cita-texto"
+            >
+                &ldquo;La vida nos enseñó que el amor verdadero es elegirnos cada día y caminar juntos con un corazón sincero, noble e incondicional&rdquo;
+            </p>
+            <p
+                class="mt-3 font-crimson text-xs sm:text-sm uppercase tracking-[0.3em] text-[#122a4d]/70"
+                id="cita-referencia"
+            >
+                Nos elegimos, hoy y siempre
+            </p>
+        </div>
+    </div>
+</section>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        gsap.fromTo(
+            "#cita-texto",
+            { opacity: 0, y: 20 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1.4,
+                ease: "sine.out",
+                scrollTrigger: {
+                    trigger: "#cita-container",
+                    start: "top 85%",
+                    toggleActions: "play none none reset",
+                },
+            },
+        );
+
+        gsap.fromTo(
+            "#cita-referencia",
+            { opacity: 0, y: 10 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "sine.out",
+                delay: 0.4,
+                scrollTrigger: {
+                    trigger: "#cita-container",
+                    start: "top 85%",
+                    toggleActions: "play none none reset",
+                },
+            },
+        );
+    });
+</script>

@@ -1,0 +1,130 @@
+<!-- ═══════════════════════════════════════════════════════════ --><!-- 📸 SECCIÓN: FOTO ÚNICA (IMAGEN COMPLETA)                    --><!-- ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full py-12 sm:py-20 md:py-24 lg:py-28">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-center">
+            <!-- MARCO TIPO FOTO IMPRESA -->
+            <div
+                id="card-foto"
+                class="relative w-full max-w-sm sm:max-w-md cursor-pointer"
+            >
+                <div
+                    class="bg-white p-3 sm:p-4 pb-10 sm:pb-14 rounded-sm shadow-2xl transition-transform duration-300 hover:scale-[1.02]"
+                    id="marco-foto"
+                >
+                    <!-- IMAGEN COMPLETA (SIN RECORTE) -->
+                    <img
+                        src="/imagenes/foto1.png"
+                        alt="Foto"
+                        class="w-full h-auto object-contain block"
+                        id="foto-unica"
+                    />
+
+                    <!-- FIRMA DECORATIVA -->
+                    <p
+                        class="font-great-vibes text-2xl sm:text-3xl text-[#122a4d] text-center mt-4 sm:mt-5"
+                    >
+                        Ana Lucía &amp; Marcelo
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🖼️ MODAL PARA AMPLIAR LA FOTO                              -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div
+    id="modalFotoUnica"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4"
+    style="opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(10px);"
+>
+    <div
+        class="absolute inset-0 bg-gradient-to-br from-gray-50 via-gray-100 to-white opacity-98"
+    >
+    </div>
+
+    <div class="relative max-w-3xl w-full z-10">
+        <button
+            id="btnCerrarFotoUnica"
+            class="absolute -top-12 right-0 text-gray-700 hover:text-gray-900 transition-all duration-200 text-4xl font-bold hover:scale-110 hover:rotate-90 drop-shadow-lg"
+            aria-label="Cerrar"
+        >
+            ✕
+        </button>
+        <img
+            src="/imagenes/foto1.png"
+            alt="Foto ampliada"
+            class="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-xl"
+        />
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🎬 ANIMACIONES CON GSAP                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            // Animación de entrada del marco
+            gsap.fromTo(
+                "#card-foto",
+                { opacity: 0, y: 50, scale: 0.95 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: "#card-foto",
+                        start: "top 85%",
+                        toggleActions: "play none none reset",
+                    },
+                },
+            );
+
+            // ═══ MODAL PARA AMPLIAR LA FOTO ═══
+            const modal = document.getElementById("modalFotoUnica");
+            const marco = document.getElementById("marco-foto");
+            const btnCerrar = document.getElementById("btnCerrarFotoUnica");
+
+            function abrirModal() {
+                if (!modal) return;
+                modal.classList.remove("hidden");
+                modal.classList.add("flex");
+                document.body.style.overflow = "hidden";
+                setTimeout(() => {
+                    modal.style.opacity = "1";
+                }, 10);
+            }
+
+            function cerrarModal() {
+                if (!modal) return;
+                modal.style.opacity = "0";
+                setTimeout(() => {
+                    modal.classList.add("hidden");
+                    modal.classList.remove("flex");
+                    document.body.style.overflow = "auto";
+                }, 300);
+            }
+
+            marco?.addEventListener("click", abrirModal);
+            btnCerrar?.addEventListener("click", (e) => {
+                e.stopPropagation();
+                cerrarModal();
+            });
+            modal?.addEventListener("click", (e) => {
+                if (e.target === modal) cerrarModal();
+            });
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") cerrarModal();
+            });
+        });
+    }
+</script>

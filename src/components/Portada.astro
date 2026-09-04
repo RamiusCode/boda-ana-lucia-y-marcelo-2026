@@ -1,0 +1,162 @@
+---
+// Portada.astro
+---
+
+<section
+    id="portada-sobre"
+    class="fixed inset-0 w-full h-screen z-50 flex flex-col items-center justify-between overflow-hidden bg-white py-8 md:py-16"
+>
+    <!-- TEXTO SUPERIOR: "DALE CLICK" -->
+    <div class="text-center z-50">
+        <h1
+            class="font-crimson text-2xl md:text-3xl lg:text-4xl text-[#122a4d] font-semibold tracking-[0.3em] uppercase mb-2"
+        >
+            DALE CLICK
+        </h1>
+        <p
+            class="font-crimson text-lg md:text-sm text-[#274c77] tracking-wider uppercase mb-8"
+        >
+            En el sobre para ver<br /> nuestra invitación
+        </p>
+    </div>
+
+    <!-- SOLAPA IZQUIERDA DEL SOBRE -->
+    <div
+        id="sobre-izq"
+        class="absolute left-0 top-0 w-1/2 h-full z-20 overflow-hidden"
+    >
+        <img
+            src="/imagenes/portada.webp"
+            alt="Portada Izquierda"
+            class="absolute top-1/2 left-0 h-full w-auto object-cover"
+            style="transform: translateY(-50%); object-position: left center;"
+        />
+    </div>
+
+    <!-- SOLAPA DERECHA DEL SOBRE -->
+    <div
+        id="sobre-der"
+        class="absolute right-0 top-0 w-1/2 h-full z-20 overflow-hidden"
+    >
+        <img
+            src="/imagenes/portada.webp"
+            alt="Portada Derecha"
+            class="absolute top-1/2 right-0 h-full w-auto object-cover"
+            style="transform: translateY(-50%); object-position: right center;"
+        />
+    </div>
+
+    <!-- BOTÓN CENTRAL (boton.webp) -->
+    <div class="relative z-50 pointer-events-auto">
+        <button
+            id="btn-sello"
+            class="relative cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none"
+        >
+            <img
+                src="/imagenes/boton.webp"
+                alt="Sello"
+                class="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48"
+                style="opacity: 1;"
+            />
+        </button>
+    </div>
+
+    <!-- TEXTO INFERIOR: "Nuestra Boda: Ana Lucía y Marcelo" -->
+    <div class="text-center z-50">
+        <p class="font-crimson text-2xl md:text-base text-[#274c77] mb-2">
+            Nuestra Boda
+        </p>
+        <h2
+            class="font-great-vibes pb-4 text-4xl md:text-5xl lg:text-6xl text-[#122a4d]"
+        >
+            Ana Lucía <br /> & <br />Marcelo
+        </h2>
+    </div>
+</section>
+
+<script>
+    import { gsap } from "gsap";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const btnSello = document.getElementById("btn-sello");
+        const sobreIzq = document.getElementById("sobre-izq");
+        const sobreDer = document.getElementById("sobre-der");
+        const portada = document.getElementById("portada-sobre");
+        const contenido = document.getElementById("contenido-revelado");
+
+        // Animación de entrada sutil del sello (SIN cambios de opacidad)
+        gsap.from("#btn-sello", {
+            scale: 0.8,
+            duration: 1.5,
+            ease: "elastic.out(1, 0.5)",
+            delay: 0.5,
+        });
+
+        // Animación de respiración del sello (SIN cambios de opacidad)
+        gsap.to("#btn-sello", {
+            scale: 1.05,
+            duration: 2.5,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+        });
+
+        btnSello?.addEventListener("click", () => {
+            // Crear y reproducir música automáticamente
+            const audio = new Audio("/musica/melodia.mp3");
+            audio.loop = true;
+            audio.volume = 0.5;
+            audio.play().catch((error: any) => {
+                console.log("Error al reproducir audio:", error);
+            });
+
+            // Guardar en window para que NombresFlores pueda controlarlo
+            (window as any).audioGlobal = audio;
+            (window as any).estaReproduciendoGlobal = true;
+
+            // Actualizar iconos inmediatamente
+            setTimeout(() => {
+                const iconoPlay = document.getElementById("icono-play");
+                const iconoPause = document.getElementById("icono-pause");
+
+                if (iconoPlay && iconoPause) {
+                    iconoPlay.classList.add("hidden");
+                    iconoPause.classList.remove("hidden");
+                    console.log("✅ Iconos actualizados a PAUSE");
+                }
+            }, 100);
+
+            gsap.to(portada, {
+                opacity: 0,
+                duration: 0.8,
+                ease: "power2.out",
+                onStart: () => {
+                    document.body.style.overflow = "auto";
+                },
+                onComplete: () => {
+                    portada?.remove(); // Eliminar completamente del DOM
+                },
+            });
+        });
+    });
+</script>
+
+<style>
+    body {
+        overflow: hidden;
+    }
+
+    /* Asegurar que no haya líneas blancas entre las mitades */
+    #sobre-izq,
+    #sobre-der {
+        margin: 0;
+        padding: 0;
+    }
+
+    #sobre-izq img,
+    #sobre-der img {
+        margin: 0;
+        padding: 0;
+        display: block;
+    }
+</style>

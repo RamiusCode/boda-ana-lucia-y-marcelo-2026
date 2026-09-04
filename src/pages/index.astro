@@ -1,0 +1,55 @@
+---
+// src/pages/index.astro
+import Layout from "../layouts/Layout.astro";
+
+import Portada from "../components/Portada.astro";
+import NombresFlores from "../components/NombresFlores.astro";
+import Contador from "../components/Contador.astro";
+import DirecionCeremonia from "../components/DireccionCeremonia.astro";
+import DirecionRecepcion from "../components/DireccionRecepcion.astro";
+import NombresPadres from "../components/NombresPadres.astro";
+import Padrinos from "../components/Padrinos.astro";
+import Fotos from "../components/Fotos.astro";
+import Itinerario from "../components/Itinerario.astro";
+import CodigoVestimenta from "../components/CodigoVestimenta.astro";
+import SugerenciaRegalo from "../components/SugerenciaRegalo.astro";
+import Fotos2 from "../components/Fotos2.astro";
+import Fotos3 from "../components/Fotos3.astro";
+import Restriccion from "../components/Restriccion.astro";
+import Confirmar from "../components/Confirmar.astro";
+import Compartirfotos from "../components/Compartirfotos.astro";
+import Reproductor from "../components/Reproductor.astro";
+import Despedida from "../components/Despedida.astro";
+import Calendario from "../components/Calendario.astro";
+import Cita from "../components/Cita.astro";
+import Pase from "../components/Pase.astro";
+import Foto from "../components/Foto.astro";
+import Galeria from "../components/Galeria.astro";
+---
+
+<Layout title="Ana Lucía & Marcelo">
+    <!-- <Portada /> -->
+    <NombresFlores />
+    <Cita />
+    <!-- <Reproductor /> -->
+    <Contador />
+    <Calendario />
+    <DirecionCeremonia />
+    <DirecionRecepcion />
+    <NombresPadres />
+    <Padrinos />
+
+    <Fotos />
+    <Itinerario />
+    <CodigoVestimenta />
+    <SugerenciaRegalo />
+    <Galeria />
+    <!-- <Fotos2 /> -->
+    <Restriccion />
+    <!-- <Compartirfotos /> -->
+    <Pase numeroPases={1} />
+    <Confirmar />
+    <!-- <Foto /> -->
+    <Fotos3 />
+    <Despedida />
+</Layout>

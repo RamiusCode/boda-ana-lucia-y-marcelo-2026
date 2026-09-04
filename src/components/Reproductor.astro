@@ -1,0 +1,319 @@
+---
+// MusicPlayer.astro
+---
+
+<section class="relative w-full py-4 md:py-20">
+    <div class="max-w-2xl mx-auto px-6">
+        <!-- Contenedor animado -->
+        <div class="music-content opacity-0">
+            <!-- Texto superior -->
+            <div class="text-center mb-4">
+                <p
+                    class="text-[#122a4d] text-lg md:text-xl font-light font-charm"
+                >
+                    Dale Play para escuchar nuestra canción.
+                </p>
+            </div>
+
+            <!-- Reproductor -->
+            <div
+                class="bg-white rounded-2xl shadow-lg p-6 md:p-8 max-w-md mx-auto border border-[#122a4d]/20"
+                id="music-player-container"
+            >
+                <!-- Controles del reproductor -->
+                <div class="flex items-center gap-4">
+                    <!-- Botón Play/Pause -->
+                    <button
+                        id="playPauseBtn"
+                        class="flex-shrink-0 w-12 h-12 rounded-full bg-[#122a4d]/10 hover:bg-[#122a4d]/20 flex items-center justify-center transition-all duration-300 focus:outline-none"
+                    >
+                        <svg
+                            id="play-icon"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            class="text-[#122a4d] ml-1"
+                        >
+                            <path d="M8 5v14l11-7z"></path>
+                        </svg>
+                        <svg
+                            id="pause-icon"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            class="text-[#122a4d] hidden"
+                        >
+                            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Barra de progreso y tiempos -->
+                    <div class="flex-1">
+                        <div
+                            class="flex items-center gap-2 text-sm text-[#122a4d] mb-2"
+                        >
+                            <span id="currentTime" class="font-medium"
+                                >0:00</span
+                            >
+                            <span class="text-[#122a4d]/70">/</span>
+                            <span id="totalDuration" class="text-[#122a4d]/70"
+                                >0:00</span
+                            >
+                        </div>
+
+                        <!-- Barra de progreso -->
+                        <input
+                            type="range"
+                            id="progressBar"
+                            value="0"
+                            max="100"
+                            class="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer slider-custom"
+                        />
+                    </div>
+
+                    <!-- Botón de volumen/opciones -->
+                    <button
+                        class="flex-shrink-0 w-10 h-10 rounded-full hover:bg-[#122a4d]/10 flex items-center justify-center transition-all duration-300 focus:outline-none"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            class="text-[#122a4d]/70"
+                        >
+                            <path
+                                d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            ></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Audio element -->
+<audio id="music-audio" preload="auto">
+    <source src="/musica/melodia.mp3" type="audio/mpeg" />
+    Tu navegador no soporta audio HTML5.
+</audio>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Animación GSAP al hacer scroll
+    gsap.fromTo(
+        ".music-content",
+        {
+            opacity: 0,
+            y: 50,
+        },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: ".music-content",
+                start: "top 80%",
+                toggleActions: "play none none none",
+            },
+        },
+    );
+
+    // Reproductor de música
+    let isPlaying = false;
+    let currentTime = 0;
+    let duration = 0;
+
+    document.addEventListener("DOMContentLoaded", () => {
+        console.log("🎵 Iniciando reproductor de música...");
+
+        const playPauseBtn = document.getElementById("playPauseBtn");
+        const progressBar = document.getElementById("progressBar");
+        const audioElement = document.getElementById("music-audio");
+
+        if (!(audioElement instanceof HTMLAudioElement)) {
+            console.log("No se encontró el elemento de audio");
+            return;
+        }
+
+        // Obtener duración del audio
+        audioElement.addEventListener("loadedmetadata", () => {
+            duration = audioElement.duration;
+            updateTimeDisplay();
+            console.log(
+                `Duración: ${Math.floor(duration / 60)}:${Math.floor(
+                    duration % 60,
+                )
+                    .toString()
+                    .padStart(2, "0")}`,
+            );
+        });
+
+        audioElement.addEventListener("canplaythrough", () => {
+            if (duration === 0 && audioElement.duration) {
+                duration = audioElement.duration;
+                updateTimeDisplay();
+            }
+        });
+
+        // Event Listeners
+        if (playPauseBtn) {
+            playPauseBtn.addEventListener("click", togglePlayPause);
+        }
+
+        if (progressBar) {
+            progressBar.addEventListener("input", seekAudio);
+        }
+
+        // Función Play/Pause
+        function togglePlayPause() {
+            const playIcon = document.getElementById("play-icon");
+            const pauseIcon = document.getElementById("pause-icon");
+
+            if (!isPlaying) {
+                audioElement
+                    .play()
+                    .catch((error) =>
+                        console.log("Error al reproducir:", error),
+                    );
+
+                if (playIcon) playIcon.classList.add("hidden");
+                if (pauseIcon) pauseIcon.classList.remove("hidden");
+
+                isPlaying = true;
+                startProgress();
+            } else {
+                audioElement.pause();
+
+                if (playIcon) playIcon.classList.remove("hidden");
+                if (pauseIcon) pauseIcon.classList.add("hidden");
+
+                isPlaying = false;
+            }
+        }
+
+        // Buscar posición en el audio
+        function seekAudio() {
+            if (!(progressBar instanceof HTMLInputElement)) return;
+
+            const value = Number(progressBar.value) || 0;
+            const seekTime = (value / 100) * audioElement.duration;
+
+            audioElement.currentTime = seekTime;
+            currentTime = seekTime;
+            updateTimeDisplay();
+        }
+
+        // Iniciar progreso
+        function startProgress() {
+            const interval = setInterval(() => {
+                if (!isPlaying) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                currentTime = audioElement.currentTime;
+                duration = audioElement.duration || duration;
+
+                if (currentTime >= duration) {
+                    isPlaying = false;
+                    const playIcon = document.getElementById("play-icon");
+                    const pauseIcon = document.getElementById("pause-icon");
+                    if (playIcon) playIcon.classList.remove("hidden");
+                    if (pauseIcon) pauseIcon.classList.add("hidden");
+                    clearInterval(interval);
+                }
+
+                updateProgress();
+            }, 100);
+        }
+
+        // Actualizar barra de progreso
+        function updateProgress() {
+            if (!(progressBar instanceof HTMLInputElement)) return;
+
+            const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+            progressBar.value = progress.toString();
+            updateTimeDisplay();
+        }
+
+        // Actualizar tiempo mostrado
+        function updateTimeDisplay() {
+            const currentTimeEl = document.getElementById("currentTime");
+            const totalDurationEl = document.getElementById("totalDuration");
+
+            if (currentTimeEl) {
+                const minutes = Math.floor(audioElement.currentTime / 60);
+                const seconds = Math.floor(audioElement.currentTime % 60);
+                currentTimeEl.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+            }
+
+            if (totalDurationEl && audioElement.duration) {
+                const totalMinutes = Math.floor(audioElement.duration / 60);
+                const totalSeconds = Math.floor(audioElement.duration % 60);
+                totalDurationEl.textContent = `${totalMinutes}:${totalSeconds.toString().padStart(2, "0")}`;
+            } else if (totalDurationEl && duration > 0) {
+                const totalMinutes = Math.floor(duration / 60);
+                const totalSeconds = Math.floor(duration % 60);
+                totalDurationEl.textContent = `${totalMinutes}:${totalSeconds.toString().padStart(2, "0")}`;
+            }
+        }
+    });
+</script>
+
+<style>
+    /* Para texto con Charm */
+    .font-charm {
+        font-family: "Charm", cursive !important;
+    }
+
+    /* Estilo personalizado para la barra de progreso */
+    .slider-custom {
+        background: #e5e7eb;
+        outline: none;
+        border-radius: 10px;
+    }
+
+    .slider-custom::-webkit-slider-thumb {
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #122a4d;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .slider-custom::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+        box-shadow: 0 3px 8px rgba(18, 42, 77, 0.5);
+    }
+
+    .slider-custom::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #122a4d;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Animación del botón play */
+    #playPauseBtn:hover {
+        transform: scale(1.05);
+    }
+
+    #playPauseBtn:active {
+        transform: scale(0.95);
+    }
+</style>

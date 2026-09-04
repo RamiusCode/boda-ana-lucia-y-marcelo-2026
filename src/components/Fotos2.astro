@@ -1,0 +1,171 @@
+<!-- ═══════════════════════════════════════════════════════════ --><!-- 📸 SECCIÓN: GALERÍA DE FOTOS                                --><!-- ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full py-2 sm:py-20 md:py-24 lg:py-32">
+    <div class="max-w-6xl mx-auto pt-4 pe-8 pb-4 ps-4 sm:px-6 lg:px-8">
+        <!-- CONTENEDOR DE FOTOS -->
+        <div class="relative w-full max-w-md mx-auto">
+            <!-- FOTO GRANDE - IZQUIERDA/ARRIBA -->
+            <div
+                id="foto1"
+                class="relative w-full aspect-[4/5] rounded-lg shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                data-aos="fade-right"
+                data-aos-duration="800"
+                data-aos-delay="100"
+            >
+                <img
+                    src="/imagenes/foto3.png"
+                    alt="Foto 1"
+                    class="w-full h-full object-cover"
+                />
+            </div>
+            <!-- FOTO PEQUEÑA - DERECHA/ABAJO -->
+            <div
+                id="foto2"
+                class="absolute bottom-0 right-2 w-[45%] aspect-[4/5] rounded-lg shadow-lg overflow-hidden cursor-pointer translate-x-6 translate-y-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                data-aos="fade-left"
+                data-aos-duration="800"
+                data-aos-delay="300"
+            >
+                <img
+                    src="/imagenes/foto4.png"
+                    alt="Foto 2"
+                    class="w-full h-full object-cover"
+                />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🖼️ MODAL CON FONDO BLANCO ELEGANTE                         -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div
+    id="modalFoto"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4"
+    style="opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(10px);"
+>
+    <!-- FONDO BLANCO CON TOQUE PLOMO -->
+    <div
+        class="absolute inset-0 bg-gradient-to-br from-gray-50 via-gray-100 to-white opacity-98"
+    >
+    </div>
+
+    <!-- CONTENIDO DEL MODAL -->
+    <div class="relative max-w-5xl w-full z-10">
+        <!-- BOTÓN CERRAR -->
+        <button
+            id="btnCerrar"
+            class="absolute -top-12 right-0 text-gray-700 hover:text-gray-900 transition-all duration-200 text-4xl font-bold hover:scale-110 hover:rotate-90 drop-shadow-lg"
+            aria-label="Cerrar modal"
+        >
+            ✕
+        </button>
+        <!-- IMAGEN PRINCIPAL NÍTIDA -->
+        <img
+            id="modalImage"
+            src=""
+            alt="Foto ampliada"
+            class="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-xl"
+        />
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 📦 LIBRERÍA AOS PARA ANIMACIONES                            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+/>
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
+></script>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 📜 JAVASCRIPT PARA EL MODAL Y ANIMACIONES                   -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script is:inline>
+    // Inicializar AOS
+    AOS.init({
+        duration: 800,
+        easing: "ease-in-out",
+        once: true,
+        mirror: false,
+        offset: 100,
+    });
+
+    // Esperar a que el DOM esté listo
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("modalFoto");
+        const modalImage = document.getElementById("modalImage");
+        const foto1 = document.getElementById("foto1");
+        const foto2 = document.getElementById("foto2");
+        const btnCerrar = document.getElementById("btnCerrar");
+
+        // Función para abrir modal
+        function abrirModal(imageSrc) {
+            modalImage.src = imageSrc;
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            document.body.style.overflow = "hidden";
+
+            // Animación de entrada
+            setTimeout(() => {
+                modal.style.opacity = "1";
+            }, 10);
+        }
+
+        // Función para cerrar modal
+        function cerrarModal() {
+            modal.style.opacity = "0";
+            setTimeout(() => {
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+                document.body.style.overflow = "auto";
+            }, 300);
+        }
+
+        // Click en foto 1
+        if (foto1) {
+            foto1.addEventListener("click", function () {
+                abrirModal("/imagenes/foto1.png");
+            });
+        }
+
+        // Click en foto 2
+        if (foto2) {
+            foto2.addEventListener("click", function () {
+                abrirModal("/imagenes/foto1.png");
+            });
+        }
+
+        // Click en botón cerrar
+        if (btnCerrar) {
+            btnCerrar.addEventListener("click", function (e) {
+                e.stopPropagation();
+                cerrarModal();
+            });
+        }
+
+        // Click en el fondo para cerrar
+        if (modal) {
+            modal.addEventListener("click", function (e) {
+                if (e.target === modal) {
+                    cerrarModal();
+                }
+            });
+        }
+
+        // Prevenir cierre al clickear la imagen
+        if (modalImage) {
+            modalImage.addEventListener("click", function (e) {
+                e.stopPropagation();
+            });
+        }
+
+        // Cerrar con tecla ESC
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                cerrarModal();
+            }
+        });
+    });
+</script>
