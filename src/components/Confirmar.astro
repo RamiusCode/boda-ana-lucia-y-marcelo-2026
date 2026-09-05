@@ -12,7 +12,7 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
 ---
 
 <!-- ═══════════════════════════════════════════════════════════ --><!-- 💬 SECCIÓN: CONFIRMA TU ASISTENCIA                         --><!-- ═══════════════════════════════════════════════════════════ -->
-<section class="relative w-full py-16 sm:py-20 md:py-24 lg:py-32">
+<section id="seccion-confirmar" class="relative w-full py-16 sm:py-20 md:py-24 lg:py-32">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- 📇 CARD DE CONFIRMAR ASISTENCIA -->
         <div class="flex justify-center">
@@ -338,6 +338,7 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
                     </p>
 
                     <p
+                        data-nombre-modal
                         class="font-great-vibes text-[2rem] leading-tight text-[#122a4d] mb-4"
                     >
                         {nombreInvitado}
@@ -350,7 +351,7 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
                         <div class="flex-1 h-px bg-[#b7956b]/50"></div>
                     </div>
 
-                    <p class="font-crimson text-base text-[#274c77] mb-4">
+                    <p data-pases-modal class="font-crimson text-base text-[#274c77] mb-4">
                         {
                             numeroPases === 1
                                 ? "Tienes 1 pase reservado."
@@ -425,13 +426,16 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
 
 <script>
     // ═══════════════════════════════════════════════════════════
-    // ⚠️  DÓNDE SE GUARDA LA CONFIRMACIÓN
-    // Pegá aquí la URL que reciba los datos (Google Apps Script,
-    // Formspree, una API propia...). Si queda vacío, el modal
-    // muestra el agradecimiento pero la confirmación NO se
-    // registra en ningún lado.
+    // 💾 DÓNDE SE GUARDA LA CONFIRMACIÓN
+    // En Supabase, en la fila del propio invitado. Se identifica por el
+    // código que trae el link (?i=k7m2p): nadie puede confirmar por otro.
+    // El panel /admin lo ve aparecer en vivo, sin recargar.
+    //
+    // Si el link NO trae código (alguien entró a la invitación pelada) o si
+    // la base no responde, el modal igual agradece: la invitación nunca se
+    // rompe delante del invitado.
     // ═══════════════════════════════════════════════════════════
-    const ENDPOINT_CONFIRMACION = "";
+    import { datosInvitado, confirmarAsistencia } from "../lib/invitado";
 
     if (typeof window !== "undefined") {
         document.addEventListener("DOMContentLoaded", () => {
@@ -450,8 +454,51 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
             const tituloGracias = document.getElementById("titulo-gracias");
             const textoGracias = document.getElementById("texto-gracias");
 
-            const nombre = modal.dataset.nombre || "";
-            const pases = parseInt(modal.dataset.pases || "1", 10);
+            // Valores por defecto del render; se reemplazan con lo que diga
+            // la base en cuanto llegue la respuesta.
+            let nombre = modal.dataset.nombre || "";
+            let pases = parseInt(modal.dataset.pases || "1", 10);
+
+            // Si el invitado ya había respondido antes, se le muestra su
+            // respuesta en vez del formulario: no confirma dos veces sin querer.
+            datosInvitado().then((inv) => {
+                if (!inv) return;
+                nombre = inv.nombre;
+                pases = inv.pases;
+
+                const titulo = modal.querySelector("[data-nombre-modal]");
+                if (titulo) titulo.textContent = inv.nombre;
+
+                const frase = modal.querySelector("[data-pases-modal]");
+                if (frase) {
+                    frase.textContent =
+                        inv.pases === 1
+                            ? "Tienes 1 pase reservado."
+                            : `Tienes  pases reservados.`;
+                }
+
+                // El cliente puede no tener contratada la confirmación:
+                // en ese caso la tarjeta entera no tiene sentido.
+                if (inv.funciones && inv.funciones.confirmacion === false) {
+                    const seccion = document.getElementById("seccion-confirmar");
+                    if (seccion) seccion.style.display = "none";
+                    return;
+                }
+
+                if (inv.confirmado === true) {
+                    mostrarGracias(
+                        "Ya confirmaste",
+                        inv.asisten === 1
+                            ? "Tu asistencia ya está confirmada. ¡Te esperamos!"
+                            : `Ya quedaron confirmadas ${inv.asisten} asistencias. ¡Los esperamos!`,
+                    );
+                } else if (inv.confirmado === false) {
+                    mostrarGracias(
+                        "Te extrañaremos",
+                        "Ya nos avisaste que no podrás acompañarnos. Gracias por responder.",
+                    );
+                }
+            });
 
             // ── ABRIR / CERRAR ──
             function abrirModal() {
@@ -482,22 +529,9 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
 
             // ── ENVÍO ──
             async function registrar(asistira, cantidad) {
-                if (!ENDPOINT_CONFIRMACION) return;
-                try {
-                    await fetch(ENDPOINT_CONFIRMACION, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            nombre,
-                            asistira,
-                            cantidad,
-                            pasesAsignados: pases,
-                            fecha: new Date().toISOString(),
-                        }),
-                    });
-                } catch (err) {
-                    console.error("No se pudo registrar la confirmación", err);
-                }
+                // Nunca lanza: si la base está caída o el link no trae
+                // código, devuelve null y el invitado igual ve el gracias.
+                return await confirmarAsistencia(asistira, cantidad);
             }
 
             function mostrarGracias(titulo, texto) {

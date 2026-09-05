@@ -1,0 +1,38 @@
+# El plan gratuito de Supabase PAUSA el proyecto tras 7 días sin actividad.
+# Entre que se reparten las invitaciones y llega la boda pueden pasar semanas
+# de calma: si se pausa, los invitados abren su link, no ven su nombre y nadie
+# se entera. Esta consulta diaria hace que Supabase nunca vea una semana de
+# silencio.
+#
+# ⚠️ ANTES DE USARLO: reemplazar SUPABASE_URL y SUPABASE_KEY por los del
+# proyecto nuevo (los mismos dos valores del .env).
+
+name: Despertar Supabase
+
+on:
+  schedule:
+    - cron: "0 12 * * *"      # 12:00 UTC = 08:00 en Bolivia
+  workflow_dispatch:           # y a mano desde la pestaña Actions
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar la base de datos
+        env:
+          SUPABASE_URL: https://wfyfiimpcvxnbzngubmb.supabase.co
+          SUPABASE_KEY: sb_publishable_LxIxjpM_I80eCg0rimoenw_rH-his92
+        run: |
+          codigo=$(curl -s -o /tmp/respuesta.txt -w "%{http_code}" \
+            -X POST "$SUPABASE_URL/rest/v1/rpc/buscar_invitado" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"codigo_buscado":"despertador"}')
+          echo "HTTP $codigo"
+          cat /tmp/respuesta.txt
+          if [ "$codigo" != "200" ]; then
+            echo "::error::Supabase respondió $codigo. Puede estar pausado."
+            exit 1
+          fi
+          echo "Base despierta."

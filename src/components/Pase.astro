@@ -65,6 +65,7 @@ const tamanoNombre =
                                 Con mucho cariño para
                             </p>
                             <h2
+                                id="nombre-invitado"
                                 class="font-great-vibes text-white leading-tight whitespace-nowrap"
                                 style={`font-size: ${tamanoNombre};`}
                             >
@@ -87,6 +88,7 @@ const tamanoNombre =
                                 Hemos reservado
                             </p>
                             <p
+                                id="numero-pases"
                                 class="text-white font-bold leading-none mt-2"
                                 style="font-size: 3.75rem; text-shadow: 0 4px 16px rgba(0,0,0,0.2);"
                             >
@@ -99,7 +101,9 @@ const tamanoNombre =
                             <p
                                 class="font-crimson text-lg leading-relaxed text-white/90 italic"
                             >
-                                {numeroPases === 1 ? "pase" : "pases"} en su honor
+                                <span id="palabra-pases"
+                                    >{numeroPases === 1 ? "pase" : "pases"}</span
+                                > en su honor
                             </p>
                         </div>
 
@@ -136,10 +140,80 @@ const tamanoNombre =
 <script>
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
+    import { datosInvitado } from "../lib/invitado";
 
     gsap.registerPlugin(ScrollTrigger);
 
+    // ═══════════════════════════════════════════════════════════
+    // 🎟️ PASE PERSONALIZADO
+    // El link trae solo un código (?i=k7m2p); el nombre y los pases viven en
+    // la base. Si los novios corrigen un nombre en el panel, el link YA
+    // ENVIADO muestra el nombre corregido sin reenviar nada.
+    // ═══════════════════════════════════════════════════════════
+
+    // El nombre va SIEMPRE en una sola línea dentro de una card de 300px:
+    // el cuerpo se ajusta por tramos según el largo. Misma escala que usa
+    // el render del servidor, para que no se note el cambio.
+    function tamanoParaNombre(nombre) {
+        const largo = nombre.length;
+        if (largo <= 14) return "2.2rem";
+        if (largo <= 20) return "1.9rem";
+        if (largo <= 26) return "1.6rem";
+        if (largo <= 34) return "1.3rem";
+        return "1.1rem";
+    }
+
+    function pintarPase(nombre, pases) {
+        if (nombre) {
+            const el = document.getElementById("nombre-invitado");
+            if (el) {
+                el.textContent = nombre;
+                el.style.fontSize = tamanoParaNombre(nombre);
+            }
+        }
+
+        if (Number.isInteger(pases) && pases > 0) {
+            const num = document.getElementById("numero-pases");
+            const palabra = document.getElementById("palabra-pases");
+            if (num) num.textContent = String(pases);
+            if (palabra) palabra.textContent = pases === 1 ? "pase" : "pases";
+
+            // Los monigotes tienen que coincidir con el número
+            const iconos = document.getElementById("iconos-pase");
+            if (iconos) {
+                const molde = iconos.firstElementChild;
+                if (molde) {
+                    iconos.innerHTML = "";
+                    for (let i = 0; i < pases; i++) {
+                        const copia = molde.cloneNode(true);
+                        copia.style.animationDelay = i * 0.2 + "s";
+                        iconos.append(copia);
+                    }
+                }
+            }
+        }
+    }
+
     if (typeof window !== "undefined") {
+        // Si no hay código en el link, datosInvitado() devuelve null al toque
+        // y la card se queda con los valores por defecto.
+        datosInvitado().then((inv) => {
+            if (!inv) return;
+
+            // Hay clientes que no usan pases: su tarjeta muestra solo el
+            // nombre. Sin esto quedaría un "1 pase en su honor" inventado.
+            if (inv.funciones && inv.funciones.pases === false) {
+                for (const id of ["numero-pase", "texto-pase", "iconos-pase"]) {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = "none";
+                }
+                pintarPase(inv.nombre, null);
+                return;
+            }
+
+            pintarPase(inv.nombre, inv.pases);
+        });
+
         document.addEventListener("DOMContentLoaded", () => {
             gsap.fromTo(
                 "#boton-decorativo-pase",

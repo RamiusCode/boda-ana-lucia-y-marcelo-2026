@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Copias de trabajo y material de referencia: no van al sitio publicado
+*copy*
+src copy/
+guia-sistema-supabase/
+servir.cjs
