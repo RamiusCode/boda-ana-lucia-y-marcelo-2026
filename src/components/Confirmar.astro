@@ -359,6 +359,45 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
                         }
                     </p>
 
+                    <!-- ¿CUÁNTOS VIENEN? (solo si tiene más de un pase) -->
+                    <div id="caja-cuantos" class="hidden mb-5">
+                        <p
+                            class="font-crimson text-sm uppercase tracking-[0.12em] text-[#274c77] mb-3"
+                        >
+                            ¿Cuántos vienen?
+                        </p>
+                        <div
+                            class="flex items-center justify-center gap-4"
+                        >
+                            <button
+                                type="button"
+                                id="btn-menos"
+                                class="w-10 h-10 rounded-full border-2 border-[#b7956b] text-[#122a4d] text-xl leading-none flex items-center justify-center hover:bg-[#b7956b]/15 transition-colors cursor-pointer"
+                                aria-label="Uno menos"
+                            >−</button>
+                            <span
+                                id="cuantos-vienen"
+                                class="font-crimson text-3xl text-[#122a4d] font-bold w-10 text-center"
+                            >1</span>
+                            <button
+                                type="button"
+                                id="btn-mas"
+                                class="w-10 h-10 rounded-full border-2 border-[#b7956b] text-[#122a4d] text-xl leading-none flex items-center justify-center hover:bg-[#b7956b]/15 transition-colors cursor-pointer"
+                                aria-label="Uno más"
+                            >+</button>
+                        </div>
+                    </div>
+
+                    <!-- NOMBRES DE QUIENES LO ACOMPAÑAN -->
+                    <div id="caja-acompanantes" class="hidden mb-5 text-left">
+                        <p
+                            class="font-crimson text-sm uppercase tracking-[0.12em] text-[#274c77] mb-3 text-center"
+                        >
+                            ¿Quiénes te acompañan?
+                        </p>
+                        <div id="campos-acompanantes" class="flex flex-col gap-2"></div>
+                    </div>
+
                     <div class="flex flex-col items-center gap-3">
                         <button
                             type="button"
@@ -456,6 +495,73 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
 
             // Valores por defecto del render; se reemplazan con lo que diga
             // la base en cuanto llegue la respuesta.
+            // Cuántos vienen y con quién. Se completan al llegar los datos
+            // del invitado; si la boda no tiene esas funciones, quedan así.
+            let cuantosVienen = 1;
+            let conAcompanantes = false;
+
+            const $ = (id) => document.getElementById(id);
+
+            function pintarCuantos() {
+                const marcador = $("cuantos-vienen");
+                if (marcador) marcador.textContent = String(cuantosVienen);
+
+                const menos = $("btn-menos");
+                const mas = $("btn-mas");
+                if (menos) menos.disabled = cuantosVienen <= 1;
+                if (mas) mas.disabled = cuantosVienen >= pases;
+                for (const b of [menos, mas]) {
+                    if (b) b.style.opacity = b.disabled ? "0.35" : "1";
+                }
+
+                if (conAcompanantes) pintarCamposAcompanantes();
+            }
+
+            // Un campo por acompañante: el invitado principal ya está en la
+            // invitación, así que van cuantosVienen - 1.
+            function pintarCamposAcompanantes() {
+                const caja = $("campos-acompanantes");
+                if (!caja) return;
+
+                const faltan = Math.max(cuantosVienen - 1, 0);
+                caja.parentElement.classList.toggle("hidden", faltan === 0);
+
+                // Lo ya escrito no se pierde al cambiar la cantidad
+                const escritos = Array.from(
+                    caja.querySelectorAll("input")
+                ).map((i) => i.value);
+
+                caja.innerHTML = "";
+                for (let i = 0; i < faltan; i++) {
+                    const campo = document.createElement("input");
+                    campo.type = "text";
+                    campo.maxLength = 60;
+                    campo.value = escritos[i] ?? "";
+                    campo.placeholder = "Nombre del acompañante " + (i + 1);
+                    campo.className =
+                        "w-full px-4 py-2.5 rounded-full border border-[#b7956b]/60 " +
+                        "bg-white/70 font-crimson text-base text-[#122a4d] " +
+                        "placeholder:text-[#274c77]/50 focus:outline-none " +
+                        "focus:border-[#b7956b] transition-colors";
+                    caja.append(campo);
+                }
+            }
+
+            function nombresEscritos() {
+                const caja = $("campos-acompanantes");
+                if (!caja) return [];
+                return Array.from(caja.querySelectorAll("input"))
+                    .map((i) => i.value.trim())
+                    .filter(Boolean);
+            }
+
+            $("btn-menos")?.addEventListener("click", () => {
+                if (cuantosVienen > 1) { cuantosVienen--; pintarCuantos(); }
+            });
+            $("btn-mas")?.addEventListener("click", () => {
+                if (cuantosVienen < pases) { cuantosVienen++; pintarCuantos(); }
+            });
+
             let nombre = modal.dataset.nombre || "";
             let pases = parseInt(modal.dataset.pases || "1", 10);
 
@@ -484,6 +590,25 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
                     if (seccion) seccion.style.display = "none";
                     return;
                 }
+
+                // ¿Cuántos vienen? Solo tiene sentido con más de un pase.
+                cuantosVienen = inv.asisten && inv.asisten > 0 ? inv.asisten : inv.pases;
+                conAcompanantes = Boolean(inv.funciones?.acompanantes);
+
+                const cajaCuantos = document.getElementById("caja-cuantos");
+                if (cajaCuantos) cajaCuantos.classList.toggle("hidden", inv.pases <= 1);
+
+                // Lo que ya había respondido, ya cargado
+                if (conAcompanantes && inv.acompanantes?.length) {
+                    pintarCamposAcompanantes();
+                    const campos = document
+                        .getElementById("campos-acompanantes")
+                        ?.querySelectorAll("input");
+                    inv.acompanantes.forEach((n, i) => {
+                        if (campos && campos[i]) campos[i].value = n;
+                    });
+                }
+                pintarCuantos();
 
                 if (inv.confirmado === true) {
                     mostrarGracias(
@@ -531,7 +656,11 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
             async function registrar(asistira, cantidad) {
                 // Nunca lanza: si la base está caída o el link no trae
                 // código, devuelve null y el invitado igual ve el gracias.
-                return await confirmarAsistencia(asistira, cantidad);
+                return await confirmarAsistencia(
+                    asistira,
+                    cantidad,
+                    asistira && conAcompanantes ? nombresEscritos() : []
+                );
             }
 
             function mostrarGracias(titulo, texto) {
@@ -544,12 +673,13 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
             btnConfirmar?.addEventListener("click", () => {
                 btnConfirmar.disabled = true;
                 btnConfirmar.textContent = "Enviando...";
-                registrar(true, pases).finally(() => {
+                const vienen = cuantosVienen;
+                registrar(true, vienen).finally(() => {
                     mostrarGracias(
                         "¡Gracias!",
-                        pases === 1
+                        vienen === 1
                             ? "Tu asistencia quedó confirmada. Nos vemos el sábado 10 de octubre."
-                            : `Quedaron confirmadas ${pases} asistencias. Nos vemos el sábado 10 de octubre.`,
+                            : `Quedaron confirmadas ${vienen} asistencias. Nos vemos el sábado 10 de octubre.`,
                     );
                 });
             });
