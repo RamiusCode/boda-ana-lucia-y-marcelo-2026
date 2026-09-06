@@ -474,7 +474,11 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
     // la base no responde, el modal igual agradece: la invitación nunca se
     // rompe delante del invitado.
     // ═══════════════════════════════════════════════════════════
-    import { datosInvitado, confirmarAsistencia } from "../lib/invitado";
+    import {
+        datosInvitado,
+        confirmarAsistencia,
+        alCambiarInvitado,
+    } from "../lib/invitado";
 
     if (typeof window !== "undefined") {
         document.addEventListener("DOMContentLoaded", () => {
@@ -567,6 +571,30 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
 
             // Si el invitado ya había respondido antes, se le muestra su
             // respuesta en vez del formulario: no confirma dos veces sin querer.
+            // Si los novios corrigen los pases mientras el invitado tiene la
+            // invitación abierta, el modal tiene que reflejarlo: si no,
+            // confirmaría sobre un número que ya no es el suyo.
+            alCambiarInvitado((inv) => {
+                if (!inv) return;
+                nombre = inv.nombre;
+                pases = inv.pases;
+
+                const titulo = modal.querySelector("[data-nombre-modal]");
+                if (titulo) titulo.textContent = inv.nombre;
+
+                const frase = modal.querySelector("[data-pases-modal]");
+                if (frase) {
+                    frase.textContent =
+                        inv.pases === 1
+                            ? "Tienes 1 pase reservado."
+                            : "Tienes " + inv.pases + " pases reservados.";
+                }
+
+                // La cantidad elegida no puede pasarse del nuevo tope
+                if (cuantosVienen > pases) cuantosVienen = pases;
+                pintarCuantos();
+            });
+
             datosInvitado().then((inv) => {
                 if (!inv) return;
                 nombre = inv.nombre;
