@@ -504,6 +504,12 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
             let cuantosVienen = 1;
             let conAcompanantes = false;
 
+            // ¿El invitado eligió una cantidad con los botones − +?
+            // Mientras no lo haga, la cantidad SIGUE a los pases: si los
+            // novios corrigen de 4 a 5, confirma 5 y no el 4 que había
+            // cuando abrió la página.
+            let eligioAMano = false;
+
             const $ = (id) => document.getElementById(id);
 
             function pintarCuantos() {
@@ -560,10 +566,10 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
             }
 
             $("btn-menos")?.addEventListener("click", () => {
-                if (cuantosVienen > 1) { cuantosVienen--; pintarCuantos(); }
+                if (cuantosVienen > 1) { cuantosVienen--; eligioAMano = true; pintarCuantos(); }
             });
             $("btn-mas")?.addEventListener("click", () => {
-                if (cuantosVienen < pases) { cuantosVienen++; pintarCuantos(); }
+                if (cuantosVienen < pases) { cuantosVienen++; eligioAMano = true; pintarCuantos(); }
             });
 
             let nombre = modal.dataset.nombre || "";
@@ -590,8 +596,9 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
                             : "Tienes " + inv.pases + " pases reservados.";
                 }
 
-                // La cantidad elegida no puede pasarse del nuevo tope
-                if (cuantosVienen > pases) cuantosVienen = pases;
+                // Si no eligió nada, la cantidad acompaña a los pases nuevos.
+                // Si eligió, se respeta lo suyo, recortado al nuevo tope.
+                cuantosVienen = eligioAMano ? Math.min(cuantosVienen, pases) : pases;
                 pintarCuantos();
             });
 
@@ -619,7 +626,14 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
                     return;
                 }
 
-                cuantosVienen = inv.asisten && inv.asisten > 0 ? inv.asisten : inv.pases;
+                // Si ya había respondido, se respeta su respuesta anterior;
+                // si no, arranca en todos sus pases.
+                if (inv.asisten && inv.asisten > 0) {
+                    cuantosVienen = inv.asisten;
+                    eligioAMano = true;
+                } else {
+                    cuantosVienen = inv.pases;
+                }
                 conAcompanantes = Boolean(inv.funciones?.acompanantes);
 
                 // El selector de cantidad es opcional y viene apagado: hay
