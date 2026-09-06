@@ -166,8 +166,10 @@ function vigilar(): void {
   });
   window.addEventListener("focus", revisar);
 
-  // Y cada 45 segundos mientras se esté mirando
-  setInterval(revisar, 45000);
+  // Y cada 10 segundos mientras se esté mirando. La consulta devuelve una
+  // fila mínima, así que a esta frecuencia sigue siendo insignificante, y
+  // para quien está mirando la pantalla 10 segundos se sienten inmediatos.
+  setInterval(revisar, 10000);
 }
 
 /**
