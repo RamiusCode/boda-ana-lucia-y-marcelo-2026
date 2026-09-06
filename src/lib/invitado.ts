@@ -31,6 +31,28 @@ export function codigoDelLink(): string | null {
   return codigo && codigo.trim() ? codigo.trim() : null;
 }
 
+/**
+ * En qué quedó la búsqueda del código del link:
+ *
+ *   sin-codigo     el link no trae ?i=, es la invitación genérica
+ *   ok             se encontró al invitado
+ *   no-existe      el código no está en la base: lo borraron
+ *   sin-respuesta  la base no contestó (pausada, sin internet)
+ *
+ * La diferencia entre los dos últimos importa: a un invitado borrado hay
+ * que decírselo, pero si lo que falla es la conexión la invitación tiene
+ * que seguir mostrándose como si nada.
+ */
+export type EstadoLink = "sin-codigo" | "ok" | "no-existe" | "sin-respuesta";
+
+let estado: EstadoLink = "sin-codigo";
+
+/** Espera a que termine la búsqueda y dice en qué quedó. */
+export async function estadoDelLink(): Promise<EstadoLink> {
+  await datosInvitado();
+  return estado;
+}
+
 // Varios componentes piden los mismos datos. Se guarda la promesa para que la
 // consulta salga UNA sola vez por visita, la pidan dos componentes o cinco.
 let pedido: Promise<Invitado | null> | null = null;
@@ -53,15 +75,30 @@ export function datosInvitado(): Promise<Invitado | null> {
 
   pedido = import("./supabase")
     .then(({ supabase, configurado }) => {
-      if (!configurado || !supabase) return null;
+      if (!configurado || !supabase) {
+        estado = "sin-respuesta";
+        return null;
+      }
       return supabase
         .rpc("buscar_invitado", { codigo_buscado: codigo })
         .then(({ data, error }: { data: Invitado[] | null; error: unknown }) => {
-          if (error || !data || !data.length) return null;
+          if (error) {
+            estado = "sin-respuesta";
+            return null;
+          }
+          if (!data || !data.length) {
+            // La base contestó y no hay nadie con ese código: lo borraron.
+            estado = "no-existe";
+            return null;
+          }
+          estado = "ok";
           return data[0];
         });
     })
-    .catch(() => null);
+    .catch(() => {
+      estado = "sin-respuesta";
+      return null;
+    });
 
   return pedido;
 }

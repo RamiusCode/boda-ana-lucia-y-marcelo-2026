@@ -1,0 +1,85 @@
+---
+// LinkNoDisponible.astro
+//
+// Cuando los novios borran a un invitado, su link deja de existir pero el
+// invitado no se entera: sin esto vería la invitación con el nombre genérico,
+// creería que todo está bien y se presentaría el día de la boda.
+//
+// Solo aparece cuando la base contestó y no encontró el código. Si la base no
+// responde —proyecto pausado, sin internet— la invitación se muestra normal:
+// dejar afuera a alguien por un problema de conexión sería mucho peor.
+---
+
+<div
+    id="link-no-disponible"
+    class="hidden fixed inset-0 z-[200] bg-white flex-col items-center justify-center px-8 text-center"
+    style="opacity: 0; transition: opacity .5s ease;"
+    role="alertdialog"
+    aria-labelledby="lnd-titulo"
+>
+    <!-- CORAZÓN -->
+    <svg
+        class="w-7 h-7 text-[#b7956b] mb-6"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden="true"
+    >
+        <path
+            d="M12 21s-7.5-4.7-9.7-9A5.4 5.4 0 0 1 12 6.3 5.4 5.4 0 0 1 21.7 12c-2.2 4.3-9.7 9-9.7 9z"
+        ></path>
+    </svg>
+
+    <h1
+        id="lnd-titulo"
+        class="font-great-vibes text-[2.6rem] sm:text-[3.2rem] leading-tight text-[#122a4d] mb-6"
+    >
+        Invitación no disponible
+    </h1>
+
+    <!-- SEPARADOR DORADO -->
+    <div class="flex items-center justify-center w-full max-w-[220px] mb-6">
+        <div class="flex-1 h-px bg-[#b7956b]/40"></div>
+        <div class="mx-3 text-[#b7956b] text-xs">&#10038;</div>
+        <div class="flex-1 h-px bg-[#b7956b]/40"></div>
+    </div>
+
+    <p
+        class="font-crimson text-lg sm:text-xl text-[#274c77] leading-relaxed max-w-md"
+    >
+        Este enlace ya no está activo.<br />
+        Si crees que se trata de un error, avísanos<br class="hidden sm:block" />
+        y con gusto te enviaremos uno nuevo.
+    </p>
+</div>
+
+<script>
+    import { estadoDelLink } from "../lib/invitado";
+
+    if (typeof window !== "undefined") {
+        estadoDelLink().then((estado) => {
+            if (estado !== "no-existe") return;
+
+            const pantalla = document.getElementById("link-no-disponible");
+            if (!pantalla) return;
+
+            // La invitación queda debajo, tapada: no se desmonta nada porque
+            // GSAP y el reproductor ya están corriendo y desarmarlos a mano
+            // es más frágil que taparlos.
+            pantalla.classList.remove("hidden");
+            pantalla.classList.add("flex");
+            document.body.style.overflow = "hidden";
+            requestAnimationFrame(() => {
+                pantalla.style.opacity = "1";
+            });
+
+            // Si hay música sonando, se corta: la invitación ya no es de nadie.
+            for (const sonido of document.querySelectorAll("audio, video")) {
+                try {
+                    (sonido as HTMLMediaElement).pause();
+                } catch {
+                    /* algunos navegadores no dejan pausar antes de interactuar */
+                }
+            }
+        });
+    }
+</script>

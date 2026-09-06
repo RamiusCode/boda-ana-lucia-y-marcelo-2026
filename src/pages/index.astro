@@ -25,9 +25,13 @@ import Cita from "../components/Cita.astro";
 import Pase from "../components/Pase.astro";
 import Foto from "../components/Foto.astro";
 import Galeria from "../components/Galeria.astro";
+import LinkNoDisponible from "../components/LinkNoDisponible.astro";
 ---
 
 <Layout title="Ana Lucía & Marcelo">
+    <!-- Tapa todo si el invitado fue borrado del panel -->
+    <LinkNoDisponible />
+
     <Portada />
     <NombresFlores />
     <Cita />
