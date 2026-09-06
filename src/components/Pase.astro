@@ -8,19 +8,23 @@ interface Props {
 const { numeroPases = 3, nombreInvitado = "Familia Rodríguez Vargas" } =
     Astro.props;
 
-// El nombre va SIEMPRE en una sola línea. Como la card es de ancho
-// fijo (300px), el cuerpo se ajusta al largo del nombre por tramos.
+// El nombre se achica según su largo, pero hasta ahí: antes se lo forzaba
+// a una sola línea y un "Familia Rodríguez Fernández" terminaba en 1.1rem,
+// tan chico que no se leía. Es preferible que ocupe dos renglones y se lea.
+//
+// La card mide 300px con 24px de aire a cada lado, así que entran unos
+// 15-18 caracteres por línea en Great Vibes.
 const largo = nombreInvitado.length;
 const tamanoNombre =
     largo <= 14
         ? "2.2rem"
-        : largo <= 20
-          ? "1.9rem"
-          : largo <= 26
-            ? "1.6rem"
-            : largo <= 34
-              ? "1.3rem"
-              : "1.1rem";
+        : largo <= 22
+          ? "1.95rem"
+          : largo <= 32
+            ? "1.7rem"
+            : largo <= 45
+              ? "1.5rem"
+              : "1.35rem";
 ---
 
 <section class="relative w-full pt-10 pb-10 sm:py-20 md:py-24 lg:py-32">
@@ -66,7 +70,7 @@ const tamanoNombre =
                             </p>
                             <h2
                                 id="nombre-invitado"
-                                class="font-great-vibes text-white leading-tight whitespace-nowrap"
+                                class="font-great-vibes text-white leading-tight text-balance"
                                 style={`font-size: ${tamanoNombre};`}
                             >
                                 {nombreInvitado}
@@ -157,10 +161,10 @@ const tamanoNombre =
     function tamanoParaNombre(nombre) {
         const largo = nombre.length;
         if (largo <= 14) return "2.2rem";
-        if (largo <= 20) return "1.9rem";
-        if (largo <= 26) return "1.6rem";
-        if (largo <= 34) return "1.3rem";
-        return "1.1rem";
+        if (largo <= 22) return "1.95rem";
+        if (largo <= 32) return "1.7rem";
+        if (largo <= 45) return "1.5rem";
+        return "1.35rem";
     }
 
     function pintarPase(nombre, pases) {
