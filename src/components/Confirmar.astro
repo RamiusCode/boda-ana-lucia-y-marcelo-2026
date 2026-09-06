@@ -591,12 +591,19 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
                     return;
                 }
 
-                // ¿Cuántos vienen? Solo tiene sentido con más de un pase.
                 cuantosVienen = inv.asisten && inv.asisten > 0 ? inv.asisten : inv.pases;
                 conAcompanantes = Boolean(inv.funciones?.acompanantes);
 
+                // El selector de cantidad es opcional y viene apagado: hay
+                // clientes que prefieren la confirmación simple, sin preguntar
+                // cuántos de los pases se usan. Se compara con === true para
+                // que las bodas que no tienen la clave sigan como estaban.
+                const eligeCantidad = inv.funciones?.cantidad === true;
+
                 const cajaCuantos = document.getElementById("caja-cuantos");
-                if (cajaCuantos) cajaCuantos.classList.toggle("hidden", inv.pases <= 1);
+                if (cajaCuantos) {
+                    cajaCuantos.classList.toggle("hidden", !eligeCantidad || inv.pases <= 1);
+                }
 
                 // Lo que ya había respondido, ya cargado
                 if (conAcompanantes && inv.acompanantes?.length) {
