@@ -140,7 +140,7 @@ const tamanoNombre =
 <script>
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
-    import { datosInvitado } from "../lib/invitado";
+    import { datosInvitado, alCambiarInvitado } from "../lib/invitado";
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -197,7 +197,7 @@ const tamanoNombre =
     if (typeof window !== "undefined") {
         // Si no hay código en el link, datosInvitado() devuelve null al toque
         // y la card se queda con los valores por defecto.
-        datosInvitado().then((inv) => {
+        function mostrarInvitado(inv) {
             if (!inv) return;
 
             // Hay clientes que no usan pases: su tarjeta muestra solo el
@@ -212,7 +212,13 @@ const tamanoNombre =
             }
 
             pintarPase(inv.nombre, inv.pases);
-        });
+        }
+
+        datosInvitado().then(mostrarInvitado);
+
+        // Si los novios corrigen el nombre o los pases mientras el invitado
+        // tiene la invitación abierta, la tarjeta se actualiza sola.
+        alCambiarInvitado(mostrarInvitado);
 
         document.addEventListener("DOMContentLoaded", () => {
             gsap.fromTo(

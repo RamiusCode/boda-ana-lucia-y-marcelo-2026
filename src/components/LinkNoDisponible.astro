@@ -53,14 +53,14 @@
 </div>
 
 <script>
-    import { estadoDelLink } from "../lib/invitado";
+    import { estadoDelLink, alCambiarInvitado } from "../lib/invitado";
 
     if (typeof window !== "undefined") {
-        estadoDelLink().then((estado) => {
+        function taparSiNoExiste(estado: string) {
             if (estado !== "no-existe") return;
 
             const pantalla = document.getElementById("link-no-disponible");
-            if (!pantalla) return;
+            if (!pantalla || !pantalla.classList.contains("hidden")) return;
 
             // La invitación queda debajo, tapada: no se desmonta nada porque
             // GSAP y el reproductor ya están corriendo y desarmarlos a mano
@@ -80,6 +80,12 @@
                     /* algunos navegadores no dejan pausar antes de interactuar */
                 }
             }
-        });
+        }
+
+        estadoDelLink().then(taparSiNoExiste);
+
+        // Si lo borran mientras tiene la invitación abierta, la pantalla
+        // aparece sin que tenga que recargar.
+        alCambiarInvitado((_inv, estado) => taparSiNoExiste(estado));
     }
 </script>

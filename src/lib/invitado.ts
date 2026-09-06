@@ -103,6 +103,73 @@ export function datosInvitado(): Promise<Invitado | null> {
   return pedido;
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+//  MANTENERSE AL DÍA
+//
+//  Si los novios corrigen los pases o borran a alguien mientras el invitado
+//  tiene la invitación abierta, conviene que la pantalla se entere.
+//
+//  No se usa la conexión en vivo de Supabase a propósito: el invitado es
+//  anónimo y la base no le manda nada, que es justo lo que impide que un
+//  curioso se quede escuchando los cambios de toda la lista. Así que se
+//  vuelve a preguntar cada tanto, y sobre todo al volver a la pestaña, que
+//  es cuando de verdad pasa: el invitado deja la página abierta, los novios
+//  corrigen, el invitado vuelve.
+// ═══════════════════════════════════════════════════════════════════════════
+
+type Escucha = (invitado: Invitado | null, estado: EstadoLink) => void;
+
+const escuchas: Escucha[] = [];
+let vigilando = false;
+let ultimo = "";
+
+/** Avisa cada vez que cambian los datos del invitado del link. */
+export function alCambiarInvitado(fn: Escucha): void {
+  escuchas.push(fn);
+  vigilar();
+}
+
+async function revisar(): Promise<void> {
+  // Con la pestaña en segundo plano no se consulta: el invitado no está
+  // mirando y no tiene sentido gastarle datos.
+  if (typeof document !== "undefined" && document.hidden) return;
+  if (!codigoDelLink()) return;
+
+  pedido = null;                       // se fuerza una consulta nueva
+  const invitado = await datosInvitado();
+
+  const ahora = JSON.stringify([invitado, estado]);
+  if (ahora === ultimo) return;        // nada cambió, nadie se entera
+  ultimo = ahora;
+
+  for (const fn of escuchas) {
+    try {
+      fn(invitado, estado);
+    } catch {
+      /* que un componente falle no puede dejar sin avisar a los demás */
+    }
+  }
+}
+
+function vigilar(): void {
+  if (vigilando || typeof window === "undefined") return;
+  if (!codigoDelLink()) return;        // sin código no hay nada que vigilar
+  vigilando = true;
+
+  datosInvitado().then((inv) => {
+    ultimo = JSON.stringify([inv, estado]);
+  });
+
+  // Al volver a la pestaña, de inmediato
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) revisar();
+  });
+  window.addEventListener("focus", revisar);
+
+  // Y cada 45 segundos mientras se esté mirando
+  setInterval(revisar, 45000);
+}
+
 /**
  * Guarda la respuesta del invitado.
  *
