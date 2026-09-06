@@ -351,7 +351,7 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
                         <div class="flex-1 h-px bg-[#b7956b]/50"></div>
                     </div>
 
-                    <p data-pases-modal class="font-crimson text-base text-[#274c77] mb-4">
+                    <p data-pases-modal class="font-crimson text-lg sm:text-xl text-[#274c77] mb-4">
                         {
                             numeroPases === 1
                                 ? "Tienes 1 pase reservado."
@@ -501,6 +501,15 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
             // la base en cuanto llegue la respuesta.
             // Cuántos vienen y con quién. Se completan al llegar los datos
             // del invitado; si la boda no tiene esas funciones, quedan así.
+            // El número va resaltado: es el dato que el invitado busca.
+            function fraseDePases(cuantos) {
+                const n = "<strong class=\"text-[1.35em] font-semibold text-[#122a4d]\">" +
+                    cuantos + "</strong>";
+                return cuantos === 1
+                    ? "Tienes " + n + " pase reservado."
+                    : "Tienes " + n + " pases reservados.";
+            }
+
             let cuantosVienen = 1;
             let conAcompanantes = false;
 
@@ -590,10 +599,7 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
 
                 const frase = modal.querySelector("[data-pases-modal]");
                 if (frase) {
-                    frase.textContent =
-                        inv.pases === 1
-                            ? "Tienes 1 pase reservado."
-                            : "Tienes " + inv.pases + " pases reservados.";
+                    frase.innerHTML = fraseDePases(inv.pases);
                 }
 
                 // Si no eligió nada, la cantidad acompaña a los pases nuevos.
@@ -612,10 +618,7 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
 
                 const frase = modal.querySelector("[data-pases-modal]");
                 if (frase) {
-                    frase.textContent =
-                        inv.pases === 1
-                            ? "Tienes 1 pase reservado."
-                            : `Tienes  pases reservados.`;
+                    frase.innerHTML = fraseDePases(inv.pases);
                 }
 
                 // El cliente puede no tener contratada la confirmación:
