@@ -351,7 +351,7 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
                         <div class="flex-1 h-px bg-[#b7956b]/50"></div>
                     </div>
 
-                    <p data-pases-modal class="font-crimson text-lg sm:text-xl text-[#274c77] mb-4">
+                    <p data-pases-modal class="font-crimson text-xl sm:text-2xl text-[#274c77] mb-4">
                         {
                             numeroPases === 1
                                 ? "Tienes 1 pase reservado."
@@ -501,9 +501,10 @@ const { nombreInvitado = "Familia Rodríguez Vargas", numeroPases = 3 } =
             // la base en cuanto llegue la respuesta.
             // Cuántos vienen y con quién. Se completan al llegar los datos
             // del invitado; si la boda no tiene esas funciones, quedan así.
-            // El número va resaltado: es el dato que el invitado busca.
+            // El número solo en negrita, del mismo tamaño que el resto: más
+            // grande cortaba el renglón y se leía como dos frases pegadas.
             function fraseDePases(cuantos) {
-                const n = "<strong class=\"text-[1.35em] font-semibold text-[#122a4d]\">" +
+                const n = "<strong class=\"font-semibold text-[#122a4d]\">" +
                     cuantos + "</strong>";
                 return cuantos === 1
                     ? "Tienes " + n + " pase reservado."
